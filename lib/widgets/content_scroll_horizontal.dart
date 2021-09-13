@@ -1,58 +1,35 @@
 import 'package:flutter/material.dart';
 
-class ContentScroll extends StatelessWidget {
+class ContentScrollHorizontal extends StatelessWidget {
   final List<String> images;
   final String title;
-  final double imageHeight;
-  final double imageWidth;
+  // final double imageHeight;
+  // final double imageWidth;
 
-  ContentScroll({
+  ContentScrollHorizontal({
     required this.images,
     required this.title,
-    required this.imageHeight,
-    required this.imageWidth,
+    // required this.imageHeight,
+    // required this.imageWidth,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              GestureDetector(
-                onTap: () => print('View $title'),
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: Colors.black,
-                  size: 30.0,
-                ),
-              ),
-            ],
-          ),
-        ),
         Container(
-          height: imageHeight,
+          height: MediaQuery.of(context).size.height,
           child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            scrollDirection: Axis.vertical,
             itemCount: images.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 margin: EdgeInsets.symmetric(
                   horizontal: 10.0,
-                  vertical: 20.0,
+                  vertical: 15.0,
                 ),
-                width: imageWidth,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   boxShadow: [

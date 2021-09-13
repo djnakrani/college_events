@@ -1,5 +1,5 @@
-import 'package:college_events/screen/models/movie_model.dart';
-import 'package:college_events/screen/widgets/content_scroll.dart';
+import 'package:college_events/models/movie_model.dart';
+import 'package:college_events/widgets/content_scroll_vertical.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -72,14 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SizedBox(height: 20.0),
-          ContentScroll(
+          ContentScrollVertical(
             images: upcoming,
             title: 'Upcoming Events',
             imageHeight: 300.0,
             imageWidth: 200.0,
           ),
           SizedBox(height: 20.0),
-          ContentScroll(
+          ContentScrollVertical(
             images: past,
             title: 'Past Events',
             imageHeight: 300.0,
