@@ -1,15 +1,21 @@
-import 'package:college_events/models/movie_model.dart';
+import 'package:college_events/models/allevents_model.dart';
 import 'package:college_events/widgets/content_scroll_horizontal.dart';
 import 'package:flutter/material.dart';
 
-class UpcomingEvent extends StatefulWidget {
+class EventsScreen extends StatefulWidget {
+  final List<Event> eventsAll;
+
+  EventsScreen({
+    required this.eventsAll,
+  });
+
   @override
   State<StatefulWidget> createState() {
-    return _UpcomingEvent();
+    return _EventsScreenState();
   }
 }
 
-class _UpcomingEvent extends State<UpcomingEvent> {
+class _EventsScreenState extends State<EventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,16 +25,18 @@ class _UpcomingEvent extends State<UpcomingEvent> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Upcoming Events",
+          "Events",
           style: TextStyle(color: Colors.black, fontSize: 28),
         ),
       ),
       body: Center(
         child: ListView(
           children: [
-            ContentScrollHorizontal(
-              images: upcoming,
-              title: 'Upcoming Events',
+            GestureDetector(
+              // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailEventScreen(event: events[index]))),
+              child: ContentScrollHorizontal(
+                events: widget.eventsAll,
+              ),
             ),
           ],
         ),

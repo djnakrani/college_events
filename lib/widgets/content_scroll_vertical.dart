@@ -1,14 +1,16 @@
-import 'package:college_events/screen/upcomingevent_screen/ueventscreen.dart';
+import 'package:college_events/models/allevents_model.dart';
+import 'package:college_events/screen/event_details_screen/detailseventscreen.dart';
+import 'package:college_events/screen/events_screen/eventscreen.dart';
 import 'package:flutter/material.dart';
 
 class ContentScrollVertical extends StatelessWidget {
-  final List<String> images;
+  final List<Event> events;
   final String title;
   final double imageHeight;
   final double imageWidth;
 
   ContentScrollVertical({
-    required this.images,
+    required this.events,
     required this.title,
     required this.imageHeight,
     required this.imageWidth,
@@ -26,17 +28,34 @@ class ContentScrollVertical extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 22.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               GestureDetector(
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UpcomingEvent())),
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: Colors.black,
-                  size: 30.0,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventsScreen(
+                      eventsAll: events,
+                    ),
+                  ),
                 ),
+                child: Text(
+                  "See All",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                // Row(
+                //   children: [
+                //     Text("See All",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+                //     Icon(
+                //       Icons.arrow_forward,
+                //       color: Colors.black,
+                //       size: 22.0,
+                //     ),
+                //   ],
+                // ),
+                // child: Text("See All"),
               ),
             ],
           ),
@@ -46,7 +65,7 @@ class ContentScrollVertical extends StatelessWidget {
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
             scrollDirection: Axis.horizontal,
-            itemCount: images.length,
+            itemCount: events.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 margin: EdgeInsets.symmetric(
@@ -66,9 +85,28 @@ class ContentScrollVertical extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image(
-                    image: AssetImage(images[index]),
-                    fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailEventScreen(
+                            imgUrl:
+                                events.map((e) => e.imageUrl).elementAt(index),
+                            title: events.map((e) => e.title).elementAt(index),
+                            date: events.map((e) => e.date).elementAt(index),
+                            description: events
+                                .map((e) => e.description)
+                                .elementAt(index),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Image(
+                      image: AssetImage(
+                          events.map((e) => e.imageUrl).elementAt(index)),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               );

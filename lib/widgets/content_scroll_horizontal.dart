@@ -1,16 +1,12 @@
+import 'package:college_events/models/allevents_model.dart';
+import 'package:college_events/screen/event_details_screen/detailseventscreen.dart';
 import 'package:flutter/material.dart';
 
 class ContentScrollHorizontal extends StatelessWidget {
-  final List<String> images;
-  final String title;
-  // final double imageHeight;
-  // final double imageWidth;
+  final List<Event> events;
 
   ContentScrollHorizontal({
-    required this.images,
-    required this.title,
-    // required this.imageHeight,
-    // required this.imageWidth,
+    required this.events,
   });
 
   @override
@@ -18,11 +14,11 @@ class ContentScrollHorizontal extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(
-          height: MediaQuery.of(context).size.height,
+          height: (MediaQuery.of(context).size.height),
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             scrollDirection: Axis.vertical,
-            itemCount: images.length,
+            itemCount: events.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 margin: EdgeInsets.symmetric(
@@ -42,9 +38,25 @@ class ContentScrollHorizontal extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image(
-                    image: AssetImage(images[index]),
-                    fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailEventScreen(
+                                imgUrl: events.map((e) => e.imageUrl).elementAt(index),
+                                title: events.map((e) => e.title).elementAt(index),
+                                date: events.map((e) => e.date).elementAt(index),
+                                description: events.map((e) => e.description).elementAt(index),
+                              ),
+                        ),
+                      );
+                    },
+                    child: Image(
+                      image: AssetImage(events.map((e) => e.imageUrl).elementAt(index)),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               );
