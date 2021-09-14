@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ContentScrollVertical(
                   // images: events.map((e) => e.imageUrl).toList(),
                   events: _UpcomingEvent,
-                  title: 'Upcoming Events',
+                  mainTitle: 'Upcoming Events',
                   imageHeight: 300.0,
                   imageWidth: 200.0,
                 ),
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailEventScreen())),
                 child: ContentScrollVertical(
                   events: _PastEvent,
-                  title: 'Past Events',
+                  mainTitle: 'Past Events',
                   imageHeight: 300.0,
                   imageWidth: 200.0,
                 ),

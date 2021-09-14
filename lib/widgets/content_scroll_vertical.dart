@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class ContentScrollVertical extends StatelessWidget {
   final List<Event> events;
-  final String title;
+  final String mainTitle;
   final double imageHeight;
   final double imageWidth;
 
   ContentScrollVertical({
     required this.events,
-    required this.title,
+    required this.mainTitle,
     required this.imageHeight,
     required this.imageWidth,
   });
@@ -26,7 +26,7 @@ class ContentScrollVertical extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                title,
+                mainTitle,
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.w600,
@@ -37,6 +37,7 @@ class ContentScrollVertical extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => EventsScreen(
+                      mainTitle: this.mainTitle,
                       eventsAll: events,
                     ),
                   ),
@@ -91,8 +92,7 @@ class ContentScrollVertical extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailEventScreen(
-                            imgUrl:
-                                events.map((e) => e.imageUrl).elementAt(index),
+                            imgUrl:events.map((e) => e.imageUrl).elementAt(index),
                             title: events.map((e) => e.title).elementAt(index),
                             date: events.map((e) => e.date).elementAt(index),
                             description: events

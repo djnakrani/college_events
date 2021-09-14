@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 
 class EventsScreen extends StatefulWidget {
   final List<Event> eventsAll;
-
+  final String mainTitle;
   EventsScreen({
     required this.eventsAll,
+    required this.mainTitle
   });
 
   @override
@@ -25,8 +26,8 @@ class _EventsScreenState extends State<EventsScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Events",
-          style: TextStyle(color: Colors.black, fontSize: 28),
+          widget.mainTitle,
+          style: TextStyle(color: Colors.black, fontSize: 26),
         ),
       ),
       body: Center(
