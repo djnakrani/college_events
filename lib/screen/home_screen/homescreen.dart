@@ -1,5 +1,6 @@
 import 'package:college_events/models/allevents_model.dart';
 import 'package:college_events/screen/event_details_screen/detailseventscreen.dart';
+import 'package:college_events/screen/login_signup_screen/login_page_screen.dart';
 import 'package:college_events/widgets/content_scroll_vertical.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -57,6 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.only(right: 30.0),
             onPressed: () => print('Search'),
             icon: Icon(Icons.search),
+            iconSize: 30.0,
+            color: Colors.black,
+          ),IconButton(
+            padding: EdgeInsets.only(right: 30.0),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => login_page_screen())),
+            icon: Icon(Icons.login),
             iconSize: 30.0,
             color: Colors.black,
           ),
