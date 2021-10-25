@@ -1,26 +1,27 @@
 import 'package:college_events/screen/home_screen/homescreen.dart';
 import 'package:college_events/screen/login_signup_screen/signup_page_screen.dart';
-import 'package:college_events/screen/login_signup_screen/forgot_screen.dart';
+import 'package:college_events/screen/login_signup_screen/login_page_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
-class login_page_screen extends StatelessWidget{
+class forgot_screen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: login(),
+      home: forgot(),
     );
   }
- 
+
 }
 
-class login extends StatefulWidget{
+class forgot extends StatefulWidget{
   @override
-  _LoginState createState() => _LoginState();
+  _ForgotState createState() => _ForgotState();
 
 }
 
-class _LoginState extends State<login>{
+class _ForgotState extends State<forgot>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +39,7 @@ class _LoginState extends State<login>{
             )
         ),
         child:ListView(
-        children:[
+          children:[
             Column(
               children:<Widget>[
                 Padding(
@@ -60,38 +61,18 @@ class _LoginState extends State<login>{
                         hintText: 'Enter Your Register Email Id'),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15.0, right: 15.0, top: 15, bottom: 0),
-                  child: TextField(
-
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                        hintText: 'Enter Password'),
-                  ),
-                ),
-                FlatButton(
-                  onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => forgot_screen()));
-                  },
-                  child: Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.red, fontSize: 15),
-                  ),
-                ),
                 Container(
                   height: 50,
                   width: 250,
+                  margin: EdgeInsets.only(top:10),
                   decoration: BoxDecoration(
                       color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                   child: FlatButton(
                     onPressed: () {
-                      // PERFORM LOGIN ACTIVITY
+                      // PERFORM Forgot ACTIVITY
                     },
                     child: Text(
-                      'Login',
+                      'Send Link',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
                   ),
@@ -99,7 +80,17 @@ class _LoginState extends State<login>{
                 FlatButton(
                   padding: EdgeInsets.all(30.0),
                   onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => signup_page_screen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => login_page_screen()));
+                  },
+                  child: Text(
+                    'Already Have a Account',
+                    style: TextStyle(color: Colors.blue, fontSize: 15),
+                  ),
+                ),
+                FlatButton(
+                  padding: EdgeInsets.all(30.0),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => signup_page_screen()));
                   },
                   child: Text(
                     'New User? Create Account',
@@ -109,7 +100,7 @@ class _LoginState extends State<login>{
                 // SizedBox(height: 250,)
               ],
             ),
-        ],
+          ],
         ),//
       ),
     );
