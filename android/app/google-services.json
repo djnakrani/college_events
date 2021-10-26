@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "886724763090",
+    "project_id": "college-event-ddc8a",
+    "storage_bucket": "college-event-ddc8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886724763090:android:d825c1aa7296d3c7c07c0b",
+        "android_client_info": {
+          "package_name": "com.example.college_events"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886724763090-ad595t2feoioif15pm5mi7mto1l8j1ic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx1uupPUa5ebyOUiNbd7VA9SHCoo9CWEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886724763090-ad595t2feoioif15pm5mi7mto1l8j1ic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
