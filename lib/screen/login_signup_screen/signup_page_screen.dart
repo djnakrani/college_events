@@ -1,5 +1,6 @@
 import 'package:college_events/screen/home_screen/homescreen.dart';
 import 'package:college_events/screen/login_signup_screen/login_page_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -21,6 +22,8 @@ class signup extends StatefulWidget{
 }
 
 class _signupState extends State<signup>{
+  late String _name,_email,_mono,_password;
+  final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,23 +63,28 @@ class _signupState extends State<signup>{
                           validator: (value) {
                             // PERFORM VALIDATION
                           },
-                          onSaved: (value) {},
+                          onChanged: (value) {
+                            _name = value.toString();
+                          },
                         ),
                         TextFormField(
                           decoration: InputDecoration(labelText: 'Email Id '),
                           keyboardType: TextInputType.emailAddress,
-                          obscureText: true,
                           validator: (value) {
                             // PERFORM VALIDATION
                           },
-                          onSaved: (value) {},
+                          onChanged: (value) {
+                            _email = value.toString();
+                          },
                         ),TextFormField(
                           decoration: InputDecoration(labelText: 'Mobile Number '),
                           keyboardType: TextInputType.number,
                           validator: (value) {
                             // PERFORM VALIDATION
                           },
-                          onSaved: (value) {},
+                          onChanged: (value) {
+                            _mono = value.toString();
+                          },
                         ),
                         TextFormField(
                           decoration: InputDecoration(labelText: 'Password '),
@@ -85,12 +93,25 @@ class _signupState extends State<signup>{
                           validator: (value) {
                             // PERFORM VALIDATION
                           },
-                          onSaved: (value) {},
+                          onChanged: (value) {
+                            _password = value.toString();
+                          },
                         ),
                         Center(
                           child:RaisedButton(
                             child: Text("REGISTER",style: TextStyle(fontSize: 20),),
-                            onPressed: () {},
+                            onPressed: () {
+                              // print(_name);
+                              // print(_email);
+                              // print(_mono);
+                              // print(_password);
+                              auth.createUserWithEmailAndPassword(email: _email, password: _password);
+                              // if(FirebaseAuth.instance.currentUser != null){
+                              //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              //       builder: (context) => HomeScreen()
+                              //   ));
+                              // }
+                            },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30)),
                             color: Colors.blue,

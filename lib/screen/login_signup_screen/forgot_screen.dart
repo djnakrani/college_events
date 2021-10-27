@@ -1,6 +1,7 @@
 import 'package:college_events/screen/home_screen/homescreen.dart';
 import 'package:college_events/screen/login_signup_screen/signup_page_screen.dart';
 import 'package:college_events/screen/login_signup_screen/login_page_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -20,6 +21,11 @@ class forgot extends StatefulWidget {
 }
 
 class _ForgotState extends State<forgot> {
+
+
+  late String _email;
+  final auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +62,9 @@ class _ForgotState extends State<forgot> {
                       validator: (value) {
                         // PERFORM VALIDATION
                       },
-                      onSaved: (value) {},
+                      onChanged: (value) {
+                        _email = value.toString();
+                      },
                     ),
                     Center(
                       child: RaisedButton(
@@ -64,7 +72,14 @@ class _ForgotState extends State<forgot> {
                           "Send Link",
                           style: TextStyle(fontSize: 20),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          auth.sendPasswordResetEmail(email: _email);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      login_page_screen()));
+                        },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         color: Colors.blue,

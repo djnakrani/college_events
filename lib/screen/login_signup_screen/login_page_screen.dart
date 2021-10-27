@@ -1,6 +1,7 @@
 import 'package:college_events/screen/home_screen/homescreen.dart';
 import 'package:college_events/screen/login_signup_screen/signup_page_screen.dart';
 import 'package:college_events/screen/login_signup_screen/forgot_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +22,9 @@ class login extends StatefulWidget {
 }
 
 class _LoginState extends State<login> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+
+  late String _email,_password;
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +68,9 @@ class _LoginState extends State<login> {
                             validator: (value) {
                               // PERFORM VALIDATION
                             },
-                            onSaved: (value) {},
+                            onChanged: (value) {
+                              _email = value.toString();
+                            },
                           ),
                           TextFormField(
                             decoration: InputDecoration(labelText: 'Password '),
@@ -74,7 +79,9 @@ class _LoginState extends State<login> {
                             validator: (value) {
                               // PERFORM VALIDATION
                             },
-                            onSaved: (value) {},
+                            onChanged: (value) {
+                              _password = value.toString();
+                            },
                           ),
                           FlatButton(
                             onPressed: () {
@@ -94,7 +101,14 @@ class _LoginState extends State<login> {
                                 "LOGIN",
                                 style: TextStyle(fontSize: 20),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                auth.signInWithEmailAndPassword(email: _email, password: _password);
+                                if(FirebaseAuth.instance.currentUser != null){
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                      builder: (context) => HomeScreen()
+                                  ));
+                                }
+                              },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
                               color: Colors.blue,
