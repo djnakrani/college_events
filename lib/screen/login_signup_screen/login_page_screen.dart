@@ -25,6 +25,8 @@ class _LoginState extends State<login> {
 
   late String _email,_password;
   final auth = FirebaseAuth.instance;
+  final _formSigninKey = GlobalKey<FormState>();
+  late SnackBar snackBar;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,7 @@ class _LoginState extends State<login> {
                     width: 350,
                     padding: EdgeInsets.all(20.0),
                     child: Form(
+                      key: _formSigninKey,
                       child: ListView(
                         children: <Widget>[
                           Container(
@@ -66,8 +69,10 @@ class _LoginState extends State<login> {
                             decoration: InputDecoration(labelText: 'Email '),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
-                              // PERFORM VALIDATION
-                            },
+                              if (value == null || value.isEmpty) {
+                                return 'Not Field Is Required';
+                              }
+                              return null;                            },
                             onChanged: (value) {
                               _email = value.toString();
                             },
@@ -77,8 +82,13 @@ class _LoginState extends State<login> {
                             // keyboardType: TextInputType.visiblePassword,
                             obscureText: true,
                             validator: (value) {
-                              // PERFORM VALIDATION
-                            },
+                              if (value == null || value.isEmpty) {
+                                return 'Not Field Is Required';
+                              }
+                              else if(value.length <= 8){
+                                return 'Minimum 8 Character';
+                              }
+                              return null;                            },
                             onChanged: (value) {
                               _password = value.toString();
                             },
@@ -102,12 +112,16 @@ class _LoginState extends State<login> {
                                 style: TextStyle(fontSize: 20),
                               ),
                               onPressed: () {
-                                auth.signInWithEmailAndPassword(email: _email, password: _password);
-                                if(FirebaseAuth.instance.currentUser != null){
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                      builder: (context) => HomeScreen()
-                                  ));
+                                if(_formSigninKey.currentState!.validate()){
+                                  auth.signInWithEmailAndPassword(email: _email, password: _password).then((value) {
+                                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                        builder: (context) => HomeScreen()));
+                                  }).catchError((onError){
+                                    ShowError(onError);
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  });
                                 }
+
                               },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
@@ -140,5 +154,17 @@ class _LoginState extends State<login> {
             ],
           )),
     );
+  }
+
+  void ShowError(onError) {
+    if (onError.toString().contains('invalid-email')) {
+      snackBar = SnackBar(content: Text('Email Address Invalid'));
+    }
+    else if (onError.toString().contains('user-not-found')) {
+      snackBar = SnackBar(content: Text('User Not Register'));
+    }
+    else{
+      snackBar = SnackBar(content: Text("Something Went Wrong..."));
+    }
   }
 }

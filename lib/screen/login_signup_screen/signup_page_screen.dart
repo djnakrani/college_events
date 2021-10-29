@@ -24,6 +24,10 @@ class signup extends StatefulWidget{
 class _signupState extends State<signup>{
   late String _name,_email,_mono,_password;
   final auth = FirebaseAuth.instance;
+  final _formSignupKey = GlobalKey<FormState>();
+
+
+  late SnackBar snackBar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +54,7 @@ class _signupState extends State<signup>{
                   width: 350,
                   padding: EdgeInsets.all(20.0),
                   child: Form(
+                    key: _formSignupKey,
                     child:ListView(
                       children: [
                         Container(
@@ -61,7 +66,11 @@ class _signupState extends State<signup>{
                           decoration: InputDecoration(labelText: 'Student Full Name '),
                           keyboardType: TextInputType.text,
                           validator: (value) {
-                            // PERFORM VALIDATION
+                            // print("Name:"+ value.toString());
+                            if (value == null || value.isEmpty) {
+                              return 'Not Field Is Required';
+                            }
+                            return null;
                           },
                           onChanged: (value) {
                             _name = value.toString();
@@ -71,7 +80,11 @@ class _signupState extends State<signup>{
                           decoration: InputDecoration(labelText: 'Email Id '),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
-                            // PERFORM VALIDATION
+                            if (value == null || value.isEmpty) {
+                              return 'Not Field Is Required';
+                            }
+                            return null;
+
                           },
                           onChanged: (value) {
                             _email = value.toString();
@@ -80,7 +93,14 @@ class _signupState extends State<signup>{
                           decoration: InputDecoration(labelText: 'Mobile Number '),
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            // PERFORM VALIDATION
+                            if (value == null || value.isEmpty) {
+                              return 'Not Field Is Required';
+                            }
+                            else if(value.length != 10){
+                              return "Invalid Mobile Number";
+                            }
+                            return null;
+
                           },
                           onChanged: (value) {
                             _mono = value.toString();
@@ -91,7 +111,10 @@ class _signupState extends State<signup>{
                           // keyboardType: TextInputType.visiblePassword,
                           obscureText: true,
                           validator: (value) {
-                            // PERFORM VALIDATION
+                            if(value!.length <= 8 ){
+                              return "Minimum 8 Digit Password";
+                            }
+                            return null;
                           },
                           onChanged: (value) {
                             _password = value.toString();
@@ -101,17 +124,24 @@ class _signupState extends State<signup>{
                           child:RaisedButton(
                             child: Text("REGISTER",style: TextStyle(fontSize: 20),),
                             onPressed: () {
-                              // print(_name);
-                              // print(_email);
-                              // print(_mono);
-                              // print(_password);
-                              auth.createUserWithEmailAndPassword(email: _email, password: _password);
-                              // if(FirebaseAuth.instance.currentUser != null){
-                              //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              //       builder: (context) => HomeScreen()
-                              //   ));
-                              // }
-                            },
+                                // print(_name);
+                                // print(_email);
+                                // print(_mono);
+                                // print(_password);
+                              if(_formSignupKey.currentState!.validate()){
+                                auth.createUserWithEmailAndPassword(email: _email, password: _password).then((value) {
+                                  snackBar = SnackBar(content: Text("Link Send Into Email"));
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomeScreen()));
+                                }).catchError((onError){
+                                  ShowError(onError);
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                });
+                                }
+                              },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30)),
                             color: Colors.blue,
@@ -140,6 +170,15 @@ class _signupState extends State<signup>{
             )
         )
     );
+  }
+
+  void ShowError(onError) {
+    if (onError.toString().contains('invalid-email')) {
+      snackBar = SnackBar(content: Text('Email Address Invalid'));
+    }
+    else{
+      snackBar = SnackBar(content: Text("Something Went Wrong..."));
+    }
   }
 }
 

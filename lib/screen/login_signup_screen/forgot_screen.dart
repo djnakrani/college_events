@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:college_events/screen/home_screen/homescreen.dart';
 import 'package:college_events/screen/login_signup_screen/signup_page_screen.dart';
 import 'package:college_events/screen/login_signup_screen/login_page_screen.dart';
@@ -25,6 +27,9 @@ class _ForgotState extends State<forgot> {
 
   late String _email;
   final auth = FirebaseAuth.instance;
+  final _formForgotKey = GlobalKey<FormState>();
+
+  late SnackBar snackBar;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +54,7 @@ class _ForgotState extends State<forgot> {
               width: 350,
               padding: EdgeInsets.all(20.0),
               child: Form(
+                key: _formForgotKey,
                 child: ListView(
                   children: <Widget>[
                     Container(
@@ -60,10 +66,13 @@ class _ForgotState extends State<forgot> {
                       decoration: InputDecoration(labelText: 'Email '),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        // PERFORM VALIDATION
+                        if(value!.isEmpty){
+                            return "This Field Is Requied";
+                        }
+                        return null;
                       },
                       onChanged: (value) {
-                        _email = value.toString();
+                        _email = value;
                       },
                     ),
                     Center(
@@ -73,12 +82,23 @@ class _ForgotState extends State<forgot> {
                           style: TextStyle(fontSize: 20),
                         ),
                         onPressed: () {
-                          auth.sendPasswordResetEmail(email: _email);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      login_page_screen()));
+                          if(_formForgotKey.currentState!.validate()) {
+                            auth.sendPasswordResetEmail(email: _email).then((value) {
+                              snackBar = SnackBar(content: Text("Link Send Into Email"));
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => login_page_screen()));
+                            }).catchError((onError){
+                              if (onError.toString().contains("user-not-found")) {
+                                snackBar = SnackBar(content: Text("User Not Found"));
+                              } else {
+                                snackBar = SnackBar(content: Text("Internal Error"));
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            });
+                          }
                         },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
