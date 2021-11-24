@@ -1,6 +1,7 @@
 import 'package:college_events/screen/home_screen/home_screen.dart';
 import 'package:college_events/screen/login_signup_screen/signup_page_screen.dart';
 import 'package:college_events/screen/login_signup_screen/forgot_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +22,11 @@ class login extends StatefulWidget {
 }
 
 class _LoginState extends State<login> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+
+  late String _email,_password;
+  final auth = FirebaseAuth.instance;
+  final _formSigninKey = GlobalKey<FormState>();
+  late SnackBar snackBar;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +55,7 @@ class _LoginState extends State<login> {
                     width: 350,
                     padding: EdgeInsets.all(20.0),
                     child: Form(
+                      key: _formSigninKey,
                       child: ListView(
                         children: <Widget>[
                           Container(
@@ -63,18 +69,29 @@ class _LoginState extends State<login> {
                             decoration: InputDecoration(labelText: 'Email '),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
-                              // PERFORM VALIDATION
+                              if (value == null || value.isEmpty) {
+                                return 'Not Field Is Required';
+                              }
+                              return null;                            },
+                            onChanged: (value) {
+                              _email = value.toString();
                             },
-                            onSaved: (value) {},
                           ),
                           TextFormField(
                             decoration: InputDecoration(labelText: 'Password '),
                             // keyboardType: TextInputType.visiblePassword,
                             obscureText: true,
                             validator: (value) {
-                              // PERFORM VALIDATION
+                              if (value == null || value.isEmpty) {
+                                return 'Not Field Is Required';
+                              }
+                              else if(value.length <= 8){
+                                return 'Minimum 8 Character';
+                              }
+                              return null;                            },
+                            onChanged: (value) {
+                              _password = value.toString();
                             },
-                            onSaved: (value) {},
                           ),
                           FlatButton(
                             onPressed: () {
@@ -94,7 +111,18 @@ class _LoginState extends State<login> {
                                 "LOGIN",
                                 style: TextStyle(fontSize: 20),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                if(_formSigninKey.currentState!.validate()){
+                                  auth.signInWithEmailAndPassword(email: _email, password: _password).then((value) {
+                                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                        builder: (context) => HomeScreen()));
+                                  }).catchError((onError){
+                                    ShowError(onError);
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  });
+                                }
+
+                              },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
                               color: Colors.blue,
@@ -126,5 +154,17 @@ class _LoginState extends State<login> {
             ],
           )),
     );
+  }
+
+  void ShowError(onError) {
+    if (onError.toString().contains('invalid-email')) {
+      snackBar = SnackBar(content: Text('Email Address Invalid'));
+    }
+    else if (onError.toString().contains('user-not-found')) {
+      snackBar = SnackBar(content: Text('User Not Register'));
+    }
+    else{
+      snackBar = SnackBar(content: Text("Something Went Wrong..."));
+    }
   }
 }
