@@ -1,6 +1,6 @@
 import 'package:college_events/screen/home_screen/home_screen.dart';
-import 'package:college_events/screen/participate_screen/participate_details_screen.dart';
-import 'package:college_events/screen/participate_screen/participate_name_screen.dart';
+import 'package:college_events/screen/match_screen/match_name_screen.dart';
+import 'package:college_events/screen/team_screen/team_name_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "College Events",
-      home: ParticipateDetailsScreen(),
+      home: HomeScreen(),
+      theme: ThemeData(
+        primaryColor: Color(int.parse('0xff144365')),
+      ),
     );
   }
 }

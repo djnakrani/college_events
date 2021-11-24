@@ -21,7 +21,7 @@ class ContentScrollVertical extends StatelessWidget {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: EdgeInsets.symmetric(horizontal: 22.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -64,7 +64,7 @@ class ContentScrollVertical extends StatelessWidget {
         Container(
           height: imageHeight,
           child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             scrollDirection: Axis.horizontal,
             itemCount: events.length,
             itemBuilder: (BuildContext context, int index) {
@@ -94,7 +94,10 @@ class ContentScrollVertical extends StatelessWidget {
                           builder: (context) => DetailEventScreen(
                             imgUrl:events.map((e) => e.imageUrl).elementAt(index),
                             title: events.map((e) => e.title).elementAt(index),
-                            date: events.map((e) => e.date).elementAt(index),
+                            startDate: events.map((e) => e.startDate).elementAt(index),
+                            endDate: events.map((e) => e.endDate).elementAt(index),
+                            lastDate: events.map((e) => e.lastDate).elementAt(index),
+                            time: events.map((e) => e.time).elementAt(index),
                             place: events.map((e) => e.place).elementAt(index),
                             mainTitle: mainTitle,
                             description: events

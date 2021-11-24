@@ -79,7 +79,10 @@ class CarouselSliderWidget extends StatelessWidget{
                           DetailEventScreen(
                             imgUrl: i.imageUrl,
                             title: i.title,
-                            date: i.date,
+                            startDate: i.startDate,
+                            endDate: i.endDate,
+                            lastDate: i.lastDate,
+                            time: i.time,
                             place: i.place,
                             mainTitle: mainTitle,
                             description: i.description,

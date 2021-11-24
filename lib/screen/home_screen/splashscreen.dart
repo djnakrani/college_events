@@ -1,6 +1,5 @@
+import 'package:college_events/screen/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:college_events/screen/home_screen//homescreen.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class splashscreen extends StatefulWidget{

@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:college_events/screen/home_screen/homescreen.dart';
 import 'package:college_events/screen/login_signup_screen/signup_page_screen.dart';
 import 'package:college_events/screen/login_signup_screen/login_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';

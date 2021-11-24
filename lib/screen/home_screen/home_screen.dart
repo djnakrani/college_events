@@ -13,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   List<Event> _Events = events;
   List<Event> _CurrentEvent = [];
   List<Event> _PastEvent = [];
@@ -27,9 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     String tmpDate = formatter.format(now);
     DateTime currentDate = formatter.parse(tmpDate);
-    _CurrentEvent = _Events.where((i) => (i.date.isAtSameMomentAs(currentDate))).toList();
-    _PastEvent = _Events.where((i) => (i.date.isBefore(currentDate))).toList();
-    _UpcomingEvent = _Events.where((i) => (i.date.isAfter(currentDate))).toList();
+    _CurrentEvent = _Events.where((i) => ((i.startDate.isBefore(currentDate) && i.endDate.isAfter(currentDate)) || i.startDate.isAtSameMomentAs(currentDate) || i.endDate.isAtSameMomentAs(currentDate) )).toList();
+    _PastEvent = _Events.where((i) => (i.endDate.isBefore(currentDate))).toList();
+    _UpcomingEvent = _Events.where((i) => (i.startDate.isAfter(currentDate))).toList();
   }
 
   @override

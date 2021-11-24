@@ -49,7 +49,10 @@ class ContentScrollHorizontal extends StatelessWidget {
                             imgUrl:
                                 events.map((e) => e.imageUrl).elementAt(index),
                             title: events.map((e) => e.title).elementAt(index),
-                            date: events.map((e) => e.date).elementAt(index),
+                            startDate: events.map((e) => e.startDate).elementAt(index),
+                            endDate: events.map((e) => e.endDate).elementAt(index),
+                            lastDate: events.map((e) => e.lastDate).elementAt(index),
+                            time: events.map((e) => e.time).elementAt(index),
                             place: events.map((e) => e.place).elementAt(index),
                             mainTitle: mainTitle,
                             description: events
