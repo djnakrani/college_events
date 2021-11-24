@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
+  int uId;
+  HomeScreen({required this.uId});
+
   @override
   State<StatefulWidget> createState() {
     return _HomeScreenState();

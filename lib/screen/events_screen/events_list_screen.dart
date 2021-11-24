@@ -34,7 +34,6 @@ class _EventsScreenState extends State<EventsScreen> {
         child: ListView(
           children: [
             GestureDetector(
-              // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailEventScreen(event: events[index]))),
               child: ContentScrollHorizontal(
                 events: widget.eventsAll,
                 mainTitle: widget.mainTitle,

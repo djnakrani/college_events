@@ -1,6 +1,4 @@
-import 'package:college_events/screen/home_screen/home_screen.dart';
-import 'package:college_events/screen/match_screen/match_name_screen.dart';
-import 'package:college_events/screen/team_screen/team_name_screen.dart';
+import 'package:college_events/screen/login_signup_screen/splashscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "College Events",
-      home: HomeScreen(),
+      home: splashscreen(),
       theme: ThemeData(
         primaryColor: Color(int.parse('0xff144365')),
       ),
