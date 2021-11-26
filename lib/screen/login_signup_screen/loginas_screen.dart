@@ -2,6 +2,7 @@ import 'package:college_events/screen/login_signup_screen/judge_login_screen.dar
 import 'package:college_events/screen/login_signup_screen/student_login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginAsScreen extends StatefulWidget {
   @override
@@ -43,7 +44,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                   margin: EdgeInsets.only(top: 100),
                   child: Text(
                     "Click on Login As and Choose how you want to Login into College Event",
-                    style: TextStyle(
+                    style: GoogleFonts.openSans(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).primaryColor,
                         fontSize: 16),
@@ -56,7 +57,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                   child: RaisedButton(
                     child: Text(
                       "LOGIN AS",
-                      style: TextStyle(fontSize: 20),
+                      style: GoogleFonts.openSans(fontSize: 20),
                     ),
                     onPressed: () {
                       showDialog(
@@ -75,7 +76,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                                 vertical: 10.0),
                                             child: Text(
                                               "Admin",
-                                              style: TextStyle(
+                                              style: GoogleFonts.openSans(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                   fontSize: 18),
@@ -105,7 +106,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                                 vertical: 10.0),
                                             child: Text(
                                               "Student",
-                                              style: TextStyle(
+                                              style: GoogleFonts.openSans(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                   fontSize: 18),
@@ -136,7 +137,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                                 vertical: 10.0),
                                             child: Text(
                                               "Judge",
-                                              style: TextStyle(
+                                              style: GoogleFonts.openSans(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                   fontSize: 18),

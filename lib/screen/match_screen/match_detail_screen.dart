@@ -1,6 +1,7 @@
 import 'package:college_events/models/allteam_details.dart';
 import 'package:college_events/screen/team_screen/team_participate_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MatchDetailsScreen extends StatefulWidget {
   final String matchName;
@@ -24,7 +25,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
         elevation: 0,
         title: Text(
           widget.matchName,
-          style: TextStyle(color: Colors.black, fontSize: 24),
+          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
         ),
 
       ),
@@ -35,7 +36,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             return ListTile(
               title: Text(
                 '${teams.map((e) => e.name).elementAt(index)}',
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                style: GoogleFonts.openSans(color: Colors.black, fontSize: 20),
               ),
               dense: true,
               trailing: Icon(Icons.keyboard_arrow_right),

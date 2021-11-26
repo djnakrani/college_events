@@ -2,6 +2,7 @@ import 'package:college_events/screen/login_signup_screen/judge_login_screen.dar
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ForgotScreen extends StatefulWidget {
   int uId;
@@ -56,7 +57,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                         margin: EdgeInsets.only(top: 20, bottom: 5),
                         child: Text(
                           "College Events",
-                          style: TextStyle(
+                          style: GoogleFonts.openSans(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).primaryColor,
                               fontSize: 18),
@@ -67,7 +68,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                         margin: EdgeInsets.only(bottom: 20),
                         child: Text(
                           "will send one time password to verify your Email ID",
-                          style: TextStyle(
+                          style: GoogleFonts.openSans(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                               fontSize: 16),
@@ -94,7 +95,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                         child: RaisedButton(
                           child: Text(
                             "Send Link",
-                            style: TextStyle(fontSize: 20),
+                            style: GoogleFonts.openSans(fontSize: 20),
                           ),
                           onPressed: () {
                             if (_formForgotKey.currentState!.validate()) {
@@ -145,7 +146,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                                 },
                                 child: Text(
                                   'New User?  REGISTER',
-                                  style: TextStyle(
+                                  style: GoogleFonts.openSans(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700),

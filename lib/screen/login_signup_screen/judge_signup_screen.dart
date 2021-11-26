@@ -3,6 +3,7 @@ import 'package:college_events/screen/login_signup_screen/judge_login_screen.dar
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class JudgeSignupScreen extends StatefulWidget{
   int uId;
@@ -133,7 +134,7 @@ class _JudgeSignupScreenState extends State<JudgeSignupScreen>{
                             margin: EdgeInsets.only(top: 20),
                             width: MediaQuery.of(context).size.width * 0.78,
                             child:RaisedButton(
-                              child: Text("REGISTER",style: TextStyle(fontSize: 20),),
+                              child: Text("REGISTER",style: GoogleFonts.openSans(fontSize: 20),),
                               onPressed: () {
                                 if(_formSignupKey.currentState!.validate()){
                                   auth.createUserWithEmailAndPassword(email: _email, password: _password).then((value) {
@@ -166,7 +167,7 @@ class _JudgeSignupScreenState extends State<JudgeSignupScreen>{
                             },
                             child: Text(
                               'Already have an account?   LOGIN',
-                              style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16,fontWeight: FontWeight.w700),
+                              style: GoogleFonts.openSans(color: Theme.of(context).primaryColor, fontSize: 16,fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],

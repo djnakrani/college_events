@@ -1,11 +1,14 @@
-import 'package:college_events/screen/login_signup_screen/splashscreen.dart';
+import 'package:college_events/screen/admin_screens/add_student_screen/add_student_screen.dart';
+import 'package:college_events/screen/admin_screens/add_student_screen/class_list_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main(){
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
-  runApp(MyApp());
+  await Firebase.initializeApp();
+  runApp(MyApp(
+
+  ));
 }
 class MyApp extends StatelessWidget {
   @override
@@ -13,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "College Events",
-      home: splashscreen(),
+      home: ClassListScreen(),
       theme: ThemeData(
         primaryColor: Color(int.parse('0xff144365')),
       ),

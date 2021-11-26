@@ -2,6 +2,7 @@ import 'package:college_events/models/allparticipate_details.dart';
 import 'package:college_events/models/allteam_details.dart';
 import 'package:college_events/screen/team_screen/team_participate_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TeamNameScreen extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _TeamNameScreenState extends State<TeamNameScreen> {
         elevation: 0,
         title: Text(
           "Team Name",
-          style: TextStyle(color: Colors.black, fontSize: 24),
+          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
         ),
         actions: <Widget>[
           IconButton(
@@ -47,7 +48,7 @@ class _TeamNameScreenState extends State<TeamNameScreen> {
             return ListTile(
               title: Text(
                 '${teams.map((e) => e.name).elementAt(index)}',
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                style: GoogleFonts.openSans(color: Colors.black, fontSize: 20),
               ),
               dense: true,
               trailing: Icon(Icons.keyboard_arrow_right),

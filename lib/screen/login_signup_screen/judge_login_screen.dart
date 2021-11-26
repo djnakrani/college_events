@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'loginas_screen.dart';
 
@@ -64,7 +65,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               margin: EdgeInsets.only(top: 10),
                               child: Text(
                                 "Enter Valid Credentials to Login as",
-                                style: TextStyle(
+                                style: GoogleFonts.openSans(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                     fontSize: 16),
@@ -76,7 +77,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               child: Text(
                                 widget.uId == 2
                                     ? "Judge" : "Admin",
-                                style: TextStyle(
+                                style: GoogleFonts.openSans(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
                                     fontSize: 18),
@@ -125,7 +126,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                                   },
                                   child: Text(
                                     'Forgot Password?',
-                                    style: TextStyle(color: Colors.red, fontSize: 15),
+                                    style: GoogleFonts.openSans(color: Colors.red, fontSize: 15),
                                   ),
                                 ),
                               ),
@@ -135,7 +136,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               child: RaisedButton(
                                 child: Text(
                                   "LOGIN",
-                                  style: TextStyle(fontSize: 20),
+                                  style: GoogleFonts.openSans(fontSize: 20),
                                 ),
                                 onPressed: () {
                                   if (_formSigninKey.currentState!.validate()) {
@@ -175,7 +176,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                                 child: Text(
                                   'New User?  REGISTER',
                                   style:
-                                      TextStyle(color: Theme.of(context).primaryColor, fontSize: 16,fontWeight: FontWeight.w700),
+                                      GoogleFonts.openSans(color: Theme.of(context).primaryColor, fontSize: 16,fontWeight: FontWeight.w700),
                                 ),
                               ):SizedBox(),
                             ),
@@ -184,7 +185,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               child:  widget.uId == 2
                                   ? Text(
                                 "Or",
-                                style: TextStyle(
+                                style: GoogleFonts.openSans(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
                                     fontSize: 18),
@@ -201,7 +202,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               },
                               child: Text(
                                 'Back to LOGIN AS',
-                                style: TextStyle(
+                                style: GoogleFonts.openSans(
                                     color: Theme.of(context).primaryColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700),

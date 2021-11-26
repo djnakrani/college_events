@@ -1,19 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/participate_screen/participate_name_screen.dart';
 import 'package:college_events/screen/team_screen/team_name_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
 class DetailEventScreen extends StatefulWidget {
   final String imgUrl;
   final String title;
-  final DateTime startDate;
-  final DateTime endDate;
-  final DateTime lastDate;
-  final String time;
+  final Timestamp startDate;
+  final Timestamp endDate;
+  final Timestamp lastDate;
+  final Timestamp time;
   final String place;
   final String description;
+  final String whomFor;
   final String mainTitle;
+  final num maxparticipate;
 
   DetailEventScreen(
       {required this.imgUrl,
@@ -24,7 +28,9 @@ class DetailEventScreen extends StatefulWidget {
       required this.time,
       required this.place,
       required this.description,
-      required this.mainTitle});
+      required this.whomFor,
+      required this.mainTitle,
+      required this.maxparticipate});
 
   @override
   State<StatefulWidget> createState() {
@@ -34,14 +40,20 @@ class DetailEventScreen extends StatefulWidget {
 
 class _DetailEventScreenState extends State<DetailEventScreen> {
   var dateFormatter = new DateFormat('dd-MM-yyyy');
+  var timeFormatter = new DateFormat('kk:mm');
 
   @override
   Widget build(BuildContext context) {
-    String startDate = dateFormatter.format(widget.startDate);
-    String endDate = dateFormatter.format(widget.endDate);
-    String lastDate = dateFormatter.format(widget.lastDate);
+    DateTime sDate = widget.startDate.toDate();
+    DateTime eDate = widget.endDate.toDate();
+    DateTime lDate = widget.lastDate.toDate();
+    DateTime time = widget.time.toDate();
+    String formattedDate = timeFormatter.format(time);
+    String startDate = dateFormatter.format(sDate);
+    String endDate = dateFormatter.format(eDate);
+    String lastDate = dateFormatter.format(lDate);
+
     return Scaffold(
-      // backgroundColor: Colors.white,
       body: ListView(
         children: <Widget>[
           Stack(
@@ -53,6 +65,17 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                   width: double.infinity,
                   fit: BoxFit.cover,
                   image: AssetImage(widget.imgUrl),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1),
+                  color: Colors.amber,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 3),
+                      blurRadius: 8.0,
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -75,21 +98,23 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       widget.title,
-                      style: TextStyle(
+                      style: GoogleFonts.openSans(
                           color: Colors.white,
                           fontSize: 25,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  IconButton(
-                    padding: EdgeInsets.only(top: 10, right: 10.0),
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.favorite_border),
-                    iconSize: 30.0,
-                    color: Colors.white,
-                  ),
+                  widget.mainTitle == "Admin"
+                      ? IconButton(
+                          padding: EdgeInsets.only(top: 10, right: 10.0),
+                          onPressed: () {
+                            setState(() {});
+                          },
+                          icon: Icon(Icons.delete),
+                          iconSize: 30.0,
+                          color: Colors.white,
+                        )
+                      : SizedBox(),
                 ],
               ),
             ],
@@ -100,7 +125,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
                   "Event Date :",
-                  style: TextStyle(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
@@ -109,8 +134,11 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
               Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  '${startDate} to ${endDate}',
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  startDate == endDate
+                      ? startDate
+                      : '${startDate} to ${endDate}',
+                  style:
+                      GoogleFonts.openSans(color: Colors.black, fontSize: 18),
                 ),
               ),
             ],
@@ -121,7 +149,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 padding: EdgeInsets.only(top: 15, left: 10),
                 child: Text(
                   "Last Applying Date :",
-                  style: TextStyle(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
@@ -131,7 +159,8 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 padding: EdgeInsets.only(top: 15, left: 10),
                 child: Text(
                   lastDate,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style:
+                      GoogleFonts.openSans(color: Colors.black, fontSize: 18),
                 ),
               ),
             ],
@@ -142,7 +171,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 padding: EdgeInsets.only(top: 15, left: 10),
                 child: Text(
                   "Event Time :",
-                  style: TextStyle(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
@@ -151,8 +180,9 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
               Padding(
                 padding: EdgeInsets.only(top: 15, left: 10),
                 child: Text(
-                  widget.time,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  formattedDate,
+                  style:
+                      GoogleFonts.openSans(color: Colors.black, fontSize: 18),
                 ),
               ),
             ],
@@ -163,7 +193,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 padding: EdgeInsets.only(top: 15, left: 10),
                 child: Text(
                   "Event Place :",
-                  style: TextStyle(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
@@ -173,7 +203,8 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 padding: EdgeInsets.only(top: 15, left: 10),
                 child: Text(
                   widget.place,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style:
+                      GoogleFonts.openSans(color: Colors.black, fontSize: 18),
                 ),
               ),
             ],
@@ -185,7 +216,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 padding: EdgeInsets.only(top: 20, left: 10),
                 child: Text(
                   "Event Description :",
-                  style: TextStyle(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
@@ -201,21 +232,27 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                   padding: EdgeInsets.all(15.0),
                   child: ReadMoreText(
                     widget.description,
-                    style: TextStyle(color: Colors.black),
-                    trimLines: 3,
+                    style: GoogleFonts.openSans(color: Colors.black),
+                    trimLines: 2,
                     colorClickableText: Colors.black,
                     trimMode: TrimMode.Line,
                     trimCollapsedText: 'Show more',
                     trimExpandedText: 'Show less',
-                    lessStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,color: Colors.black),
-                    moreStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,color: Colors.black),
+                    lessStyle: GoogleFonts.openSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                    moreStyle: GoogleFonts.openSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                   ),
                 ),
               ),
             ],
           ),
           Container(
-            padding: EdgeInsets.only(top: 5, bottom: 30, left: 90, right: 90),
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
             child: RaisedButton(
               child: Text(
                 widget.mainTitle == "Today Events"
@@ -225,7 +262,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                         : widget.mainTitle == "Upcoming Events"
                             ? "Apply"
                             : "Else",
-                style: TextStyle(fontSize: 20),
+                style: GoogleFonts.openSans(fontSize: 20),
               ),
               onPressed: () {
                 if (widget.mainTitle == "Today Events") {
@@ -245,8 +282,8 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                           builder: (context) => ParticipateNameScreen()));
                 } else {}
               },
-              color: Colors.blueAccent,
-              textColor: Colors.black,
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
               padding: EdgeInsets.all(8.0),
               splashColor: Colors.grey,
             ),
@@ -260,17 +297,17 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
     if (widget.mainTitle == "Today Events") {
       return Text(
         "View",
-        style: TextStyle(fontSize: 20),
+        style: GoogleFonts.openSans(fontSize: 20),
       );
     } else if (widget.mainTitle == "Past Events") {
       return Text(
         "View Result",
-        style: TextStyle(fontSize: 20),
+        style: GoogleFonts.openSans(fontSize: 20),
       );
     } else if (widget.mainTitle == "Upcoming Events") {
       return Text(
         "Apply",
-        style: TextStyle(fontSize: 20),
+        style: GoogleFonts.openSans(fontSize: 20),
       );
     } else {}
   }

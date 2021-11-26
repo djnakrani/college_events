@@ -1,8 +1,7 @@
-import 'package:college_events/models/allparticipate_details.dart';
 import 'package:college_events/models/allteam_details.dart';
 import 'package:college_events/screen/match_screen/create_match_screen.dart';
-import 'package:college_events/screen/team_screen/team_participate_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'match_detail_screen.dart';
 
@@ -24,7 +23,7 @@ class _MatchNameScreenState extends State<MatchNameScreen> {
         elevation: 0,
         title: Text(
           "Match Name",
-          style: TextStyle(color: Colors.black, fontSize: 24),
+          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
         ),
         actions: <Widget>[
           IconButton(
@@ -60,7 +59,7 @@ class _MatchNameScreenState extends State<MatchNameScreen> {
                   ),
                   Text(
                     "Add New Match",
-                    style: TextStyle(
+                    style: GoogleFonts.openSans(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 18),
@@ -83,7 +82,7 @@ class _MatchNameScreenState extends State<MatchNameScreen> {
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Text(
                 "Pending Match",
-                style: TextStyle(
+                style: GoogleFonts.openSans(
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18),
@@ -109,7 +108,7 @@ class _MatchNameScreenState extends State<MatchNameScreen> {
                       ),
                       Text(
                         '${teams.map((e) => e.name).elementAt(index)}\n  vs \n${teams.map((e) => e.name).elementAt(index)}',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: GoogleFonts.openSans(color: Colors.black, fontSize: 20),
                       ),
                     ],
                   ),
@@ -139,7 +138,7 @@ class _MatchNameScreenState extends State<MatchNameScreen> {
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Text(
                 "All Match",
-                style: TextStyle(
+                style: GoogleFonts.openSans(
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18),
@@ -164,7 +163,7 @@ class _MatchNameScreenState extends State<MatchNameScreen> {
                       ),
                       Text(
                         '${teams.map((e) => e.name).elementAt(index)}\n  vs \n${teams.map((e) => e.name).elementAt(index)}',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: GoogleFonts.openSans(color: Colors.black, fontSize: 20),
                       ),
                     ],
                   ),

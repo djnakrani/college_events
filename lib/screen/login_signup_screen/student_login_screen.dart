@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'loginas_screen.dart';
 
 class StudentLoginPageScreen extends StatefulWidget {
@@ -58,7 +59,7 @@ class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
                               margin: EdgeInsets.only(top: 20),
                               child: Text(
                                 "Enter Your Enrollment Number to Login as",
-                                style: TextStyle(
+                                style: GoogleFonts.openSans(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                     fontSize: 16),
@@ -69,7 +70,7 @@ class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
                               margin: EdgeInsets.only(bottom: 20,top: 5),
                               child: Text(
                                 "Student",
-                                style: TextStyle(
+                                style: GoogleFonts.openSans(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
                                     fontSize: 18),
@@ -95,7 +96,7 @@ class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
                               child: RaisedButton(
                                 child: Text(
                                   "LOGIN",
-                                  style: TextStyle(fontSize: 20),
+                                  style: GoogleFonts.openSans(fontSize: 20),
                                 ),
                                 onPressed: () {},
                                 shape: RoundedRectangleBorder(
@@ -115,7 +116,7 @@ class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
                               },
                               child: Text(
                                 'Back to LOGIN AS',
-                                style: TextStyle(
+                                style: GoogleFonts.openSans(
                                     color: Theme.of(context).primaryColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700),

@@ -1,6 +1,7 @@
 import 'package:college_events/models/allparticipate_details.dart';
-import 'package:college_events/screen/participate_screen/participate_details_screen.dart';
+import 'package:college_events/screen/student_profile_screen/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ParticipateNameScreen extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
         elevation: 0,
         title: Text(
           "Participate",
-          style: TextStyle(color: Colors.black, fontSize: 24),
+          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
         ),
         actions: <Widget>[
           IconButton(
@@ -46,7 +47,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
             return ListTile(
               title: Text(
                 '${participates.map((e) => e.name).elementAt(index)}',
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                style: GoogleFonts.openSans(color: Colors.black, fontSize: 20),
               ),
               dense: true,
               trailing: Icon(Icons.keyboard_arrow_right),
@@ -54,14 +55,14 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                 padding: EdgeInsets.only(top: 10),
                 child: Text(
                   '${participates.map((e) => e.div).elementAt(index)}',
-                  style: TextStyle(color: Colors.black, fontSize: 14),
+                  style: GoogleFonts.openSans(color: Colors.black, fontSize: 14),
                 ),
               ),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ParticipateDetailsScreen(),
+                    builder: (context) => ProfileScreen(pId : 1),
                   ),
                 );
               },
