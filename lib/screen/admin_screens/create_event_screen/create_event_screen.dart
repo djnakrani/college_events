@@ -25,20 +25,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   CollectionReference objEventDetails =
       FirebaseFirestore.instance.collection('event_details');
+  final objNotificationsDetails =
+      FirebaseFirestore.instance.collection("notifications_details");
   final List<String> whomFor = ["Male", "Female", "Both"];
   String _selectedType = "Male";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
           "Create Event",
-          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
+          style: GoogleFonts.openSans(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -98,17 +104,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 Padding(
                     padding: EdgeInsets.only(left: 8),
                     child:
-                        new CalendarPicker(_startDateController, "Start Date")),
+                        new CalendarPicker(_startDateController, "Event Start Date")),
                 Padding(
                     padding: EdgeInsets.only(left: 8),
-                    child: new CalendarPicker(_endDateController, "End Date")),
+                    child: new CalendarPicker(_endDateController, "Event End Date")),
                 Padding(
                     padding: EdgeInsets.only(left: 8),
                     child:
-                        new CalendarPicker(_lastDateController, "Last Date")),
+                        new CalendarPicker(_lastDateController, "Last Applying Date for Event")),
                 Padding(
                     padding: EdgeInsets.only(left: 8),
-                    child: new TimePicker(_timeController, "Time")),
+                    child: new TimePicker(_timeController, "Event Time")),
                 Card(
                   margin: EdgeInsets.only(top: 20.0),
                   shape: RoundedRectangleBorder(
@@ -152,7 +158,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   ),
                 ),
                 new Padding(
-                  padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
+                  padding: const EdgeInsets.only(top: 12.0, bottom: 10.0),
                   child: new TextFormField(
                     // controller: _maxController,
                     keyboardType: TextInputType.number,
@@ -169,7 +175,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: new MaterialButton(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -208,9 +214,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               'whomfor': _selectedType,
                               'imgurl': 'images/tugofwar.jpg',
                             })
-                            .then((value) => Navigator.pop(context))
-                            .catchError(
-                                (error) => print("Failed to add user: $error"));
+                            .then((value) => objNotificationsDetails
+                                .add({
+                                  'notificationtitle': _eventName,
+                                  'notificationdescription':
+                                      'event is created and last date for apply in event is ${_lastDateController.text}',
+                                  'datetime': Timestamp.now(),
+                                })
+                                .then((value) => Navigator.pop(context))
+                                .catchError((error) => print(
+                                    "Failed to add Notification: $error")))
+                            .catchError((error) =>
+                                print("Failed to add Notification: $error"));
                       }
                     },
                   ),

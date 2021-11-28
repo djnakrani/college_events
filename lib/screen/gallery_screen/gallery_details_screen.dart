@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class GalleryDetailsScreen extends StatefulWidget {
-  int intPage;
+  final int intPage;
   final List<String> gallary = [
     "img1.png",
     "img2.png",
@@ -38,14 +38,18 @@ class _GalleryDetailsScreenState extends State<GalleryDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 0,
           title: Text(
             "",
-            style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
+            style: GoogleFonts.openSans(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         body: Stack(

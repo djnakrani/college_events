@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JudgeSignupScreen extends StatefulWidget{
-  int uId;
+  final int uId;
   JudgeSignupScreen({required this.uId});
 
   @override
@@ -78,7 +78,6 @@ class _JudgeSignupScreenState extends State<JudgeSignupScreen>{
                                 return 'Please Enter Your Email ID';
                               }
                               return null;
-
                             },
                             onChanged: (value) {
                               _email = value.toString();
@@ -94,7 +93,6 @@ class _JudgeSignupScreenState extends State<JudgeSignupScreen>{
                                 return "Invalid Mobile Number";
                               }
                               return null;
-
                             },
                             onChanged: (value) {
                               _mono = value.toString();
@@ -133,7 +131,7 @@ class _JudgeSignupScreenState extends State<JudgeSignupScreen>{
                           Container(
                             margin: EdgeInsets.only(top: 20),
                             width: MediaQuery.of(context).size.width * 0.78,
-                            child:RaisedButton(
+                            child:MaterialButton(
                               child: Text("REGISTER",style: GoogleFonts.openSans(fontSize: 20),),
                               onPressed: () {
                                 if(_formSignupKey.currentState!.validate()){
@@ -157,7 +155,7 @@ class _JudgeSignupScreenState extends State<JudgeSignupScreen>{
                               padding: EdgeInsets.symmetric(vertical: 8.0),
                             ),
                           ),
-                          FlatButton(
+                          MaterialButton(
                             padding: EdgeInsets.all(10.0),
                             onPressed: () {
                               Navigator.push(

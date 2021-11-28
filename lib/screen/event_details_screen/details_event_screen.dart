@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
 class DetailEventScreen extends StatefulWidget {
+  final int uId;
   final String imgUrl;
   final String title;
   final Timestamp startDate;
@@ -20,7 +21,8 @@ class DetailEventScreen extends StatefulWidget {
   final num maxparticipate;
 
   DetailEventScreen(
-      {required this.imgUrl,
+      {required this.uId,
+      required this.imgUrl,
       required this.title,
       required this.startDate,
       required this.endDate,
@@ -54,6 +56,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
     String lastDate = dateFormatter.format(lDate);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: ListView(
         children: <Widget>[
           Stack(
@@ -88,7 +91,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   IconButton(
-                    padding: EdgeInsets.only(top: 10, left: 10.0),
+                    padding: EdgeInsets.only(top: 10, left: 15.0),
                     onPressed: () => Navigator.pop(context),
                     icon: Icon(Icons.arrow_back),
                     iconSize: 30.0,
@@ -104,9 +107,9 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  widget.mainTitle == "Admin"
+                  widget.mainTitle == "Upcoming Events"
                       ? IconButton(
-                          padding: EdgeInsets.only(top: 10, right: 10.0),
+                          padding: EdgeInsets.only(top: 10, right: 15.0),
                           onPressed: () {
                             setState(() {});
                           },
@@ -114,7 +117,9 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                           iconSize: 30.0,
                           color: Colors.white,
                         )
-                      : SizedBox(),
+                      : SizedBox(
+                          width: 30,
+                        ),
                 ],
               ),
             ],
@@ -229,10 +234,13 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
             children: <Widget>[
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(15.0),
+                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20),
                   child: ReadMoreText(
                     widget.description,
-                    style: GoogleFonts.openSans(color: Colors.black),
+                    style: GoogleFonts.openSans(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
                     trimLines: 2,
                     colorClickableText: Colors.black,
                     trimMode: TrimMode.Line,
@@ -251,64 +259,62 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
               ),
             ],
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
-            child: RaisedButton(
-              child: Text(
-                widget.mainTitle == "Today Events"
-                    ? "View"
-                    : widget.mainTitle == "Past Events"
-                        ? "View Result"
-                        : widget.mainTitle == "Upcoming Events"
-                            ? "Apply"
-                            : "Else",
-                style: GoogleFonts.openSans(fontSize: 20),
-              ),
-              onPressed: () {
-                if (widget.mainTitle == "Today Events") {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => TeamNameScreen()));
-                } else if (widget.mainTitle == "Upcoming Events") {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ParticipateNameScreen()));
-                } else if (widget.mainTitle == "Past Events") {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ParticipateNameScreen()));
-                } else {}
-              },
-              color: Theme.of(context).primaryColor,
-              textColor: Colors.white,
-              padding: EdgeInsets.all(8.0),
-              splashColor: Colors.grey,
-            ),
-          )
+          (widget.mainTitle == "Today Events" && widget.uId == 1)
+              ? SizedBox()
+              : Container(
+                  padding: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
+                  child: MaterialButton(
+                    child: Text(
+                      materialButtonText(),
+                      style: GoogleFonts.openSans(fontSize: 20),
+                    ),
+                    onPressed: () => clickMaterialButton(),
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    padding: EdgeInsets.all(8.0),
+                    splashColor: Colors.grey,
+                  ),
+                ),
         ],
       ),
     );
   }
 
-  raisedButtonText() {
-    if (widget.mainTitle == "Today Events") {
-      return Text(
-        "View",
-        style: GoogleFonts.openSans(fontSize: 20),
-      );
+  materialButtonText() {
+    if (widget.mainTitle == "Today Events" ||
+        widget.mainTitle == "Upcoming Events" && widget.uId == 0) {
+      return "View Participate";
+    } else if (widget.mainTitle == "Upcoming Events" && widget.uId == 1) {
+      return "Apply";
+    } else if (widget.mainTitle == "Today Events" ||
+        widget.mainTitle == "Upcoming Events" && widget.uId == 2) {
+      return "View Participate";
     } else if (widget.mainTitle == "Past Events") {
-      return Text(
-        "View Result",
-        style: GoogleFonts.openSans(fontSize: 20),
-      );
-    } else if (widget.mainTitle == "Upcoming Events") {
-      return Text(
-        "Apply",
-        style: GoogleFonts.openSans(fontSize: 20),
-      );
-    } else {}
+      return "View Result";
+    } else {
+      return "";
+    }
+  }
+
+  clickMaterialButton() {
+    if (widget.mainTitle == "Today Events" ||
+        widget.mainTitle == "Upcoming Events" && widget.uId == 1) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ParticipateNameScreen()));
+    } else if (widget.mainTitle == "Upcoming Events" && widget.uId == 1) {
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => TeamNameScreen()));
+    } else if (widget.mainTitle == "Today Events" ||
+        widget.mainTitle == "Upcoming Events" && widget.uId == 2) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ParticipateNameScreen()));
+    } else if (widget.mainTitle == "Past Events") {
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => TeamNameScreen()));
+    } else {
+      return "";
+    }
   }
 }

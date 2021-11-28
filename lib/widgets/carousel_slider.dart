@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:college_events/models/allevents_model.dart';
 import 'package:college_events/screen/event_details_screen/details_event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,36 +12,37 @@ class CarouselSliderWidget extends StatelessWidget {
     "img3.png",
   ];
   final String mainTitle;
+  int uId;
 
   CarouselSliderWidget({
-    // required this.events,
+    required this.uId,
     required this.mainTitle,
   });
+
+  var objEventDetails = FirebaseFirestore.instance.collection("event_details");
+
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection("event_details")
-          // .where("startdate", isLessThan: new DateTime.now())
+      stream: objEventDetails
           .where("enddate", isGreaterThan: new DateTime.now())
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
         } else if (snapshot.hasData && snapshot.data?.docs.length != 0) {
-          // print("Inside");
-          // print(snapshot.data?.docs.length);
           return CarouselSlider.builder(
             itemCount: snapshot.data?.docs.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {
               QueryDocumentSnapshot<Object?>? documentSnapshot =
-                  snapshot.data?.docs[index];
-              // print(documentSnapshot);
+              snapshot.data?.docs[index];
               return Container(
-                // padding: EdgeInsets.all(2),
                 margin: EdgeInsets.only(top: 8, bottom: 8),
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   color: Colors.amber,
@@ -65,7 +63,10 @@ class CarouselSliderWidget extends StatelessWidget {
                         ),
                         fit: BoxFit.fill,
                         height: 240,
-                        width: (MediaQuery.of(context).size.width),
+                        width: (MediaQuery
+                            .of(context)
+                            .size
+                            .width),
                       ),
                       Positioned(
                         child: Container(
@@ -79,7 +80,10 @@ class CarouselSliderWidget extends StatelessWidget {
                           ),
                           color: Colors.white54,
                           padding: EdgeInsets.only(top: 8, left: 15, bottom: 8),
-                          width: (MediaQuery.of(context).size.width),
+                          width: (MediaQuery
+                              .of(context)
+                              .size
+                              .width),
                           alignment: Alignment.bottomLeft,
                         ),
                         bottom: 0,
@@ -92,6 +96,7 @@ class CarouselSliderWidget extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) =>
                             DetailEventScreen(
+                              uId: uId,
                               imgUrl: documentSnapshot["imgurl"],
                               title: documentSnapshot["eventtitle"],
                               startDate: documentSnapshot["startdate"],
@@ -133,7 +138,10 @@ class CarouselSliderWidget extends StatelessWidget {
                 return Container(
                   // padding: EdgeInsets.all(2),
                   margin: EdgeInsets.only(top: 8, bottom: 8),
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     color: Colors.amber,
@@ -151,7 +159,10 @@ class CarouselSliderWidget extends StatelessWidget {
                         image: AssetImage("images/${i.toString()}"),
                         fit: BoxFit.fill,
                         height: 240,
-                        width: (MediaQuery.of(context).size.width),
+                        width: (MediaQuery
+                            .of(context)
+                            .size
+                            .width),
                       ),
                     ],
                   ),
@@ -164,8 +175,6 @@ class CarouselSliderWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 //  CarouselSlider With List (Just For Reference)
 

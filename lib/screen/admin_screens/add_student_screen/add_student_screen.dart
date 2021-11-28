@@ -29,14 +29,18 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
           "Add Student",
-          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
+          style: GoogleFonts.openSans(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(

@@ -18,9 +18,9 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(

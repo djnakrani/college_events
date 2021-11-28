@@ -1,5 +1,6 @@
 import 'package:college_events/models/allparticipate_details.dart';
-import 'package:college_events/screen/student_profile_screen/profile_screen.dart';
+import 'package:college_events/screen/profile_screen/student_profile_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,9 +15,9 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
@@ -62,7 +63,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfileScreen(pId : 1),
+                    builder: (context) => StudentProfileScreen(pId : 1),
                   ),
                 );
               },

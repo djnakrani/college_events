@@ -27,9 +27,9 @@ class TimePickerState extends State<TimePicker> {
     if (date == null) return;
 
     final TimeOfDay? time = await showTimePicker(
-            context: context,
-            initialTime: stringToTime(widget._controller.text) ??
-                TimeOfDay.now().replacing(minute: 0));
+        context: context,
+        initialTime: stringToTime(widget._controller.text) ??
+            TimeOfDay.now().replacing(minute: 0));
 
     if (time == null) return;
 
@@ -68,14 +68,15 @@ class TimePickerState extends State<TimePicker> {
       new Expanded(
           child: new TextFormField(
         decoration: new InputDecoration(
-            labelText: widget.dtPickerTitle,
-            icon: new Icon(Icons.calendar_today)),
+          labelText: widget.dtPickerTitle,
+          // icon: new Icon(Icons.calendar_today)
+        ),
         controller: widget._controller,
         keyboardType: TextInputType.datetime,
         validator: (val) => dateValidator(val!) ? "Enter a valid date" : null,
       )),
       new IconButton(
-        icon: new Icon(Icons.more_horiz),
+        icon: new Icon(Icons.calendar_today),
         onPressed: () => dateTimePicker(),
         tooltip: "Choose date",
       )

@@ -23,14 +23,18 @@ class _StudentListScreenState extends State<StudentListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
           widget.title,
-          style: GoogleFonts.openSans(color: Colors.black, fontSize: 26),
+          style: GoogleFonts.openSans(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -40,35 +44,38 @@ class _StudentListScreenState extends State<StudentListScreen> {
           if (snapshot.hasError) {
             return Text('Something went wrong');
           } else if (snapshot.hasData && snapshot.data?.docs.length != 0) {
-            return ListView.separated(
-              scrollDirection: Axis.vertical,
-              itemCount: snapshot.data!.docs.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                QueryDocumentSnapshot<Object?>? documentSnapshot =
-                    snapshot.data?.docs[index];
-                return ListTile(
-                  leading: Icon(Icons.person,size: 34,),
-                  title: Text(
-                    (documentSnapshot != null)
-                        ? (documentSnapshot["fullname"])
-                        : "",
-                    style: GoogleFonts.openSans(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                  ),
-                  trailing: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.arrow_forward),
-                    iconSize: 24.0,
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider();
-              },
+            return SingleChildScrollView(
+              child: ListView.separated(
+                scrollDirection: Axis.vertical,
+                itemCount: snapshot.data!.docs.length,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  QueryDocumentSnapshot<Object?>? documentSnapshot =
+                      snapshot.data?.docs[index];
+                  return ListTile(
+                    leading: Icon(Icons.person,size: 34,),
+                    title: Text(
+                      (documentSnapshot != null)
+                          ? (documentSnapshot["fullname"])
+                          : "",
+                      style: GoogleFonts.openSans(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600),
+                      maxLines: 1,
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.arrow_forward),
+                      iconSize: 24.0,
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+              ),
             );
           }
           return Container(

@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:college_events/models/allevents_model.dart';
 import 'package:college_events/screen/event_details_screen/details_event_screen.dart';
 import 'package:college_events/screen/events_screen/events_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ContentScrollVertical extends StatelessWidget {
-  // final List<Event> events;
   final String mainTitle;
   final double imageHeight;
   final double imageWidth;
+  int uId;
 
   ContentScrollVertical({
-    // required this.events,
+    required this.uId,
     required this.mainTitle,
     required this.imageHeight,
     required this.imageWidth,
   });
-  final objEventDetails = FirebaseFirestore.instance.collection("event_details");
+
+  final objEventDetails =
+      FirebaseFirestore.instance.collection("event_details");
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +42,14 @@ class ContentScrollVertical extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => EventsScreen(
                       mainTitle: this.mainTitle,
-                      // eventsAll: events,
+                      uId: uId,
                     ),
                   ),
                 ),
                 child: Text(
                   "See All",
-                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: GoogleFonts.openSans(
+                      fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 // Row(
                 //   children: [
@@ -65,11 +67,15 @@ class ContentScrollVertical extends StatelessWidget {
           ),
         ),
         StreamBuilder<QuerySnapshot>(
-          stream: mainTitle == "Past Events" ? objEventDetails
-              .where("enddate", isLessThan: new DateTime.now())
-              .snapshots() : objEventDetails
-              .where("startdate", isGreaterThan: new DateTime.now())
-              .snapshots(),
+          stream: mainTitle == "Past Events"
+              ? objEventDetails
+                  .where("enddate", isLessThan: new DateTime.now())
+                  .orderBy("enddate", descending: true)
+                  .snapshots()
+              : objEventDetails
+                  .where("startdate", isGreaterThan: new DateTime.now())
+                  .orderBy("startdate", descending: false)
+                  .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');
@@ -82,7 +88,7 @@ class ContentScrollVertical extends StatelessWidget {
                   itemCount: snapshot.data?.docs.length,
                   itemBuilder: (BuildContext context, int index) {
                     QueryDocumentSnapshot<Object?>? documentSnapshot =
-                    snapshot.data?.docs[index];
+                        snapshot.data?.docs[index];
                     return Container(
                       margin: EdgeInsets.symmetric(
                         horizontal: 10.0,
@@ -107,6 +113,7 @@ class ContentScrollVertical extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailEventScreen(
+                                  uId: uId,
                                   imgUrl: documentSnapshot!["imgurl"],
                                   title: documentSnapshot["eventtitle"],
                                   startDate: documentSnapshot["startdate"],
@@ -117,7 +124,8 @@ class ContentScrollVertical extends StatelessWidget {
                                   whomFor: documentSnapshot["whomfor"],
                                   mainTitle: mainTitle,
                                   description: documentSnapshot["description"],
-                                  maxparticipate: documentSnapshot["maxparticipate"],
+                                  maxparticipate:
+                                      documentSnapshot["maxparticipate"],
                                 ),
                               ),
                             );
@@ -127,18 +135,22 @@ class ContentScrollVertical extends StatelessWidget {
                               Image(
                                 image: AssetImage(documentSnapshot!["imgurl"]),
                                 fit: BoxFit.cover,
-                                height:(MediaQuery.of(context).size.height),
+                                height: (MediaQuery.of(context).size.height),
                                 width: (MediaQuery.of(context).size.width),
                               ),
                               Positioned(
                                 child: Container(
-                                  child:Text(
+                                  child: Text(
                                     documentSnapshot["eventtitle"],
-                                    style: GoogleFonts.openSans(color: Colors.black, fontSize: 20,fontWeight: FontWeight.bold),
+                                    style: GoogleFonts.openSans(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                     maxLines: 1,
                                   ),
                                   color: Colors.white54,
-                                  padding: EdgeInsets.only(top: 8, left: 15, bottom: 8),
+                                  padding: EdgeInsets.only(
+                                      top: 8, left: 15, bottom: 8),
                                   width: (MediaQuery.of(context).size.width),
                                   alignment: Alignment.bottomLeft,
                                 ),
@@ -153,7 +165,8 @@ class ContentScrollVertical extends StatelessWidget {
                 ),
               );
             }
-            return Container(height: 100, child: Center(child: Text("NO DATA")));
+            return Container(
+                height: 100, child: Center(child: Text("NO DATA")));
           },
         ),
       ],

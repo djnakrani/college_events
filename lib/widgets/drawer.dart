@@ -1,12 +1,14 @@
+import 'package:college_events/screen/admin_screens/add_student_screen/class_list_screen.dart';
+import 'package:college_events/screen/admin_screens/create_event_screen/add_events_list_screen.dart';
+import 'package:college_events/screen/admin_screens/manage_judge_screen/judge_list_screen.dart';
 import 'package:college_events/screen/events_screen/events_list_screen.dart';
 import 'package:college_events/screen/gallery_screen/gallery_screen.dart';
-import 'package:college_events/screen/student_profile_screen/profile_screen.dart';
+import 'package:college_events/screen/profile_screen/student_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class navigationDrawer extends StatelessWidget {
-  int uId;
-
+  final int uId;
   navigationDrawer({
     required this.uId,
   });
@@ -14,117 +16,149 @@ class navigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          createDrawerHeader(),
-          createDrawerBodyItem(
-            icon: Icons.account_circle,
-            text: 'Profile',
-            onTap: () {
-              uId == 1
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileScreen(pId: 0),
-                      ))
-                  : SizedBox();
-            },
-          ),
-          createDrawerBodyItem(
-            icon: Icons.event_note,
-            text: uId == 1 ? 'Your Events' : "Assign Upcoming Events",
-            onTap: () {
-              uId == 1
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EventsScreen(mainTitle: "Your Events"),
-                      ))
-                  : Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EventsScreen(mainTitle: "Assign Upcoming Events"),
-                      ),
-                    );
-            },
-          ),
-          createDrawerBodyItem(
-            icon: Icons.collections,
-            text: 'Gallery',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GalleryScreen(),
-                ),
-              );
-            },
-          ),
-          createDrawerBodyItem(
-            icon: Icons.contact_page,
-            text: 'About Institute',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GalleryScreen(),
-                ),
-              );
-            },
-          ),
-          createDrawerBodyItem(
-            icon: Icons.feedback,
-            text: 'Feedback',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GalleryScreen(),
-                ),
-              );
-            },
-          ),
-          createDrawerBodyItem(
-            icon: Icons.logout,
-            text: 'Logout',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GalleryScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            enabled: false,
-            title: Text('App version 1.0.0',
-                style: GoogleFonts.openSans(
-                    fontSize: 16.0,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500)),
-            onTap: () {},
-          ),
-        ],
+      child: Container(
+        color: Theme.of(context).backgroundColor,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            createDrawerHeader(context),
+            createDrawerBodyItem(
+              icon: Icons.account_circle,
+              text: uId == 0 ? 'Add Student' : 'Profile',
+              onTap: () {
+                uId == 0
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ClassListScreen(),
+                        ))
+                    : uId == 1
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StudentProfileScreen(pId: 0),
+                            ))
+                        : SizedBox();
+              },
+            ),
+            createDrawerBodyItem(
+              icon: Icons.event_note,
+              text: uId == 1
+                  ? 'Your Events'
+                  : uId == 2
+                      ? "Assign Upcoming Events"
+                      : "Create Event",
+              onTap: () {
+                uId == 0
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddEventsScreen(uId: uId,),
+                        ))
+                    : uId == 2
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EventsScreen(
+                                uId: uId,
+                                mainTitle: "Assign Upcoming Events",
+                              ),
+                            ),
+                          )
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EventsScreen(
+                                mainTitle: "Your Events",
+                                uId: uId,
+                              ),
+                            ));
+              },
+            ),
+            if (uId == 0) createDrawerBodyItem(
+              icon: Icons.contact_page,
+              text: 'Manage Judge',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => JudgeListScreen(uId: uId,),
+                  ),
+                );
+              },
+            ),
+            createDrawerBodyItem(
+              icon: Icons.collections,
+              text: 'Gallery',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GalleryScreen(uId),
+                  ),
+                );
+              },
+            ),
+            createDrawerBodyItem(
+              icon: Icons.contact_page,
+              text: 'About Institute',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => JudgeListScreen(uId: uId,),
+                  ),
+                );
+              },
+            ),
+            createDrawerBodyItem(
+              icon: Icons.feedback,
+              text: 'Feedback',
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => GalleryScreen(),
+                //   ),
+                // );
+              },
+            ),
+            createDrawerBodyItem(
+              icon: Icons.logout,
+              text: 'Logout',
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => GalleryScreen(),
+                //   ),
+                // );
+              },
+            ),
+            ListTile(
+              enabled: false,
+              title: Text('App version 1.0.0',
+                  style: GoogleFonts.openSans(
+                      fontSize: 16.0,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500)),
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget createDrawerHeader() {
+  Widget createDrawerHeader(BuildContext context) {
     return Container(
       height: 268,
       child: DrawerHeader(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.zero,
-        // decoration: BoxDecoration(
-        //   image: DecorationImage(
-        //     fit: BoxFit.fill,
-        //     image: AssetImage('images/storywriting.jpg'),
-        //   ),
-        // ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

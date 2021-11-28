@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EventsScreen extends StatefulWidget {
+  int uId;
   final String mainTitle;
-  EventsScreen({
-    required this.mainTitle
-  });
+
+  EventsScreen({required this.uId, required this.mainTitle});
 
   @override
   State<StatefulWidget> createState() {
@@ -16,14 +16,15 @@ class EventsScreen extends StatefulWidget {
 }
 
 class _EventsScreenState extends State<EventsScreen> {
-  final objEventDetails = FirebaseFirestore.instance.collection("event_details");
+  final objEventDetails =
+      FirebaseFirestore.instance.collection("event_details");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
@@ -33,14 +34,18 @@ class _EventsScreenState extends State<EventsScreen> {
       ),
       body: Center(
         child: StreamBuilder<QuerySnapshot>(
-          stream: widget.mainTitle == "Past Events" ? objEventDetails
-              .where("enddate", isLessThan: new DateTime.now())
-              .snapshots() : widget.mainTitle == "Upcoming Events" ? FirebaseFirestore.instance
-              .collection("event_details")
-              .where("startdate", isGreaterThan: new DateTime.now())
-              .snapshots() : FirebaseFirestore.instance
-              .collection("event_details")
-              .snapshots(),
+          stream: widget.mainTitle == "Past Events"
+              ? objEventDetails
+                  .where("enddate", isLessThan: new DateTime.now())
+                  .snapshots()
+              : widget.mainTitle == "Upcoming Events"
+                  ? FirebaseFirestore.instance
+                      .collection("event_details")
+                      .where("startdate", isGreaterThan: new DateTime.now())
+                      .snapshots()
+                  : FirebaseFirestore.instance
+                      .collection("event_details")
+                      .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');
@@ -51,7 +56,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 itemCount: snapshot.data?.docs.length,
                 itemBuilder: (BuildContext context, int index) {
                   QueryDocumentSnapshot<Object?>? documentSnapshot =
-                  snapshot.data?.docs[index];
+                      snapshot.data?.docs[index];
                   return Container(
                     margin: EdgeInsets.symmetric(
                       horizontal: 10.0,
@@ -77,6 +82,7 @@ class _EventsScreenState extends State<EventsScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => DetailEventScreen(
+                                uId: widget.uId,
                                 imgUrl: documentSnapshot!["imgurl"],
                                 title: documentSnapshot["eventtitle"],
                                 startDate: documentSnapshot["startdate"],
@@ -87,7 +93,8 @@ class _EventsScreenState extends State<EventsScreen> {
                                 whomFor: documentSnapshot["whomfor"],
                                 mainTitle: widget.mainTitle,
                                 description: documentSnapshot["description"],
-                                maxparticipate: documentSnapshot["maxparticipate"],
+                                maxparticipate:
+                                    documentSnapshot["maxparticipate"],
                               ),
                             ),
                           );
@@ -96,7 +103,6 @@ class _EventsScreenState extends State<EventsScreen> {
                           children: <Widget>[
                             Image(
                               image: AssetImage(documentSnapshot!["imgurl"]),
-
                               fit: BoxFit.cover,
                               width: MediaQuery.of(context).size.width,
                               height: 240,
@@ -104,9 +110,7 @@ class _EventsScreenState extends State<EventsScreen> {
                             Positioned(
                               child: Container(
                                 child: Text(
-                                  (documentSnapshot != null)
-                                      ? (documentSnapshot["eventtitle"])
-                                      : "",
+                                  (documentSnapshot["eventtitle"]),
                                   style: GoogleFonts.openSans(
                                       color: Colors.black,
                                       fontSize: 20,
@@ -129,7 +133,8 @@ class _EventsScreenState extends State<EventsScreen> {
                 },
               );
             }
-            return Container(height: 100, child: Center(child: Text("NO DATA")));
+            return Container(
+                height: 100, child: Center(child: Text("NO DATA")));
           },
         ),
       ),

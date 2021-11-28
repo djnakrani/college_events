@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProfileScreen extends StatefulWidget {
-  int pId;
-  ProfileScreen({required this.pId});
+class StudentProfileScreen extends StatefulWidget {
+  final int pId;
+  StudentProfileScreen({required this.pId});
 
   @override
   State<StatefulWidget> createState() {
-    return _ProfileScreenState();
+    return _StudentProfileScreenState();
   }
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _StudentProfileScreenState extends State<StudentProfileScreen> {
   List<String> items = <String>[
     "Enrollment Number",
     "Roll Number",
@@ -39,9 +39,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             widget.pId == 0 ? Container(
-              child: RaisedButton(
+              child: MaterialButton(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Text(
