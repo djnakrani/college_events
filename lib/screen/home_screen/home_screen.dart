@@ -1,11 +1,14 @@
-import 'package:college_events/models/allevents_model.dart';
+import 'package:college_events/screen/notification_screen/notification_list_screen.dart';
 import 'package:college_events/widgets/carousel_slider.dart';
 import 'package:college_events/widgets/content_scroll_vertical.dart';
 import 'package:college_events/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
+  final int uId;
+  HomeScreen({required this.uId});
+
   @override
   State<StatefulWidget> createState() {
     return _HomeScreenState();
@@ -13,49 +16,42 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Event> _Events = events;
-  List<Event> _CurrentEvent = [];
-  List<Event> _PastEvent = [];
-  List<Event> _UpcomingEvent = [];
-  var now = new DateTime.now();
-  var formatter = new DateFormat('dd-MM-yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    String tmpDate = formatter.format(now);
-    DateTime currentDate = formatter.parse(tmpDate);
-    _CurrentEvent = _Events.where((i) => ((i.startDate.isBefore(currentDate) && i.endDate.isAfter(currentDate)) || i.startDate.isAtSameMomentAs(currentDate) || i.endDate.isAtSameMomentAs(currentDate) )).toList();
-    _PastEvent = _Events.where((i) => (i.endDate.isBefore(currentDate))).toList();
-    _UpcomingEvent = _Events.where((i) => (i.startDate.isAfter(currentDate))).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: navigationDrawer(),
-      backgroundColor: Colors.white,
+      drawer: navigationDrawer(
+        uId: widget.uId,
+      ),
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0,
         leading: IconButton(
-          padding: EdgeInsets.only(left: 10.0),
+          padding: EdgeInsets.only(top: 4, left: 10.0),
           onPressed: () => _scaffoldKey.currentState!.openDrawer(),
           icon: Icon(Icons.menu),
           iconSize: 30.0,
           color: Colors.black,
         ),
-        title: Text(
-          "    College Events",
-          style: TextStyle(color: Colors.black, fontSize: 28),
+        title: Center(
+          child: Text(
+            "College Events",
+            style: GoogleFonts.openSans(
+                color: Colors.black, fontSize: 28, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
         ),
         actions: <Widget>[
           IconButton(
-            padding: EdgeInsets.only(right: 10.0),
-            onPressed: () => print('Search'),
-            icon: Icon(Icons.search),
+            padding: EdgeInsets.only(top: 4, right: 10.0),
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NotificationsListScreen(widget.uId))),
+            icon: Icon(Icons.notifications),
             iconSize: 30.0,
             color: Colors.black,
           ),
@@ -67,16 +63,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             margin: EdgeInsets.only(top: 10),
             child: CarouselSliderWidget(
-              events: _CurrentEvent,
-              mainTitle: 'Today Events'
+              uId: widget.uId,
+              mainTitle: 'Today Events',
             ),
           ),
           SizedBox(height: 20.0),
           GestureDetector(
-            // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailEventScreen())),
             child: ContentScrollVertical(
-              // images: events.map((e) => e.imageUrl).toList(),
-              events: _UpcomingEvent,
+              uId: widget.uId,
               mainTitle: 'Upcoming Events',
               imageHeight: 300.0,
               imageWidth: 200.0,
@@ -84,9 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 20.0),
           GestureDetector(
-            // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailEventScreen())),
             child: ContentScrollVertical(
-              events: _PastEvent,
+              uId: widget.uId,
               mainTitle: 'Past Events',
               imageHeight: 300.0,
               imageWidth: 200.0,
