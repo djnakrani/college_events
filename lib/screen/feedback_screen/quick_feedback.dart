@@ -1,33 +1,17 @@
-library quick_feedback;
-
 import 'dart:io';
 import 'package:college_events/screen/feedback_screen/material_feedback_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class QuickFeedback extends StatefulWidget {
-  // String title of the feedback dialog
   final String title;
-
-  // default star value
   final int defaultRating;
-
-  // show text box hint
   final bool showTextBox;
-
-  // text box hint
   final String textBoxHint;
-
-  // on submit callback method
   final Function onSubmitCallback;
-
-  // on submit callback method
   final Function onAskLaterCallback;
-
-  // submit button text default to SUBMIT
   final String submitText;
-
-  // submit button text default to ASK ME LATER
   final String askLaterText;
 
   QuickFeedback({
@@ -91,32 +75,33 @@ class _QuickFeedbackState extends State<QuickFeedback> {
 
   void _iconAsPerRating() {
     setState(() {
-      // _currentFace = _getFeedbackIcon();
+      _currentFace = _getFeedbackIcon();
     });
   }
 
-  Widget _getFeedbackIcon() {
+  Icon _getFeedbackIcon() {
     switch (_rating) {
       case 1:
-        return Icon(Icons.insert_emoticon, key: ValueKey(_rating));
+        return Icon(FontAwesomeIcons.frown, key: ValueKey(_rating));
         break;
       case 2:
-        return Icon(Icons.insert_emoticon, key: ValueKey(_rating));
+        return Icon(FontAwesomeIcons.frownOpen, key: ValueKey(_rating));
         break;
       case 3:
-        return Icon(Icons.insert_emoticon, key: ValueKey(_rating));
+        return Icon(FontAwesomeIcons.smile, key: ValueKey(_rating));
         break;
       case 4:
-        return Icon(Icons.insert_emoticon, key: ValueKey(_rating));
+        return Icon(FontAwesomeIcons.grin, key: ValueKey(_rating));
         break;
       case 5:
-        return Icon(Icons.insert_emoticon, key: ValueKey(_rating));
+        return Icon(FontAwesomeIcons.smileBeam, key: ValueKey(_rating));
         break;
       default:
-        return Icon(Icons.insert_emoticon, key: ValueKey(_rating));
+        return Icon(FontAwesomeIcons.smile, key: ValueKey(_rating));
         break;
     }
   }
+
 
   List<Widget> _buildStars() {
     List<Widget> buttons = [];

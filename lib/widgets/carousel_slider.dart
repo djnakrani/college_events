@@ -21,12 +21,17 @@ class CarouselSliderWidget extends StatelessWidget {
 
   var objEventDetails = FirebaseFirestore.instance.collection("event_details");
 
+  // Stream getCurrentEvent() async* {
+  //   objEventDetails
+  //       .where("enddate", isGreaterThan: new DateTime.now())
+  //       .snapshots();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: objEventDetails
-          .where("enddate", isGreaterThan: new DateTime.now())
+          .where("startdate", isEqualTo: new DateTime.now())
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -36,13 +41,10 @@ class CarouselSliderWidget extends StatelessWidget {
             itemCount: snapshot.data?.docs.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {
               QueryDocumentSnapshot<Object?>? documentSnapshot =
-              snapshot.data?.docs[index];
+                  snapshot.data?.docs[index];
               return Container(
                 margin: EdgeInsets.only(top: 8, bottom: 8),
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   color: Colors.amber,
@@ -63,10 +65,7 @@ class CarouselSliderWidget extends StatelessWidget {
                         ),
                         fit: BoxFit.fill,
                         height: 240,
-                        width: (MediaQuery
-                            .of(context)
-                            .size
-                            .width),
+                        width: (MediaQuery.of(context).size.width),
                       ),
                       Positioned(
                         child: Container(
@@ -80,10 +79,7 @@ class CarouselSliderWidget extends StatelessWidget {
                           ),
                           color: Colors.white54,
                           padding: EdgeInsets.only(top: 8, left: 15, bottom: 8),
-                          width: (MediaQuery
-                              .of(context)
-                              .size
-                              .width),
+                          width: (MediaQuery.of(context).size.width),
                           alignment: Alignment.bottomLeft,
                         ),
                         bottom: 0,
@@ -94,21 +90,21 @@ class CarouselSliderWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            DetailEventScreen(
-                              uId: uId,
-                              imgUrl: documentSnapshot["imgurl"],
-                              title: documentSnapshot["eventtitle"],
-                              startDate: documentSnapshot["startdate"],
-                              endDate: documentSnapshot["enddate"],
-                              lastDate: documentSnapshot["lastdate"],
-                              time: documentSnapshot["time"],
-                              place: documentSnapshot["place"],
-                              whomFor: documentSnapshot["whomfor"],
-                              mainTitle: mainTitle,
-                              description: documentSnapshot["description"],
-                              maxparticipate: documentSnapshot["maxparticipate"],
-                            ),
+                        builder: (context) => DetailEventScreen(
+                          uId: uId,
+                          eventId: documentSnapshot.id,
+                          imgUrl: documentSnapshot["imgurl"],
+                          title: documentSnapshot["eventtitle"],
+                          startDate: documentSnapshot["startdate"],
+                          endDate: documentSnapshot["enddate"],
+                          lastDate: documentSnapshot["lastdate"],
+                          time: documentSnapshot["time"],
+                          place: documentSnapshot["place"],
+                          whomFor: documentSnapshot["whomfor"],
+                          mainTitle: mainTitle,
+                          description: documentSnapshot["description"],
+                          maxparticipate: documentSnapshot["maxparticipate"],
+                        ),
                       ),
                     );
                   },
@@ -138,10 +134,7 @@ class CarouselSliderWidget extends StatelessWidget {
                 return Container(
                   // padding: EdgeInsets.all(2),
                   margin: EdgeInsets.only(top: 8, bottom: 8),
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     color: Colors.amber,
@@ -159,10 +152,7 @@ class CarouselSliderWidget extends StatelessWidget {
                         image: AssetImage("images/${i.toString()}"),
                         fit: BoxFit.fill,
                         height: 240,
-                        width: (MediaQuery
-                            .of(context)
-                            .size
-                            .width),
+                        width: (MediaQuery.of(context).size.width),
                       ),
                     ],
                   ),

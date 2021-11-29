@@ -83,7 +83,8 @@ class _AddEventsScreenState extends State<AddEventsScreen> {
                             MaterialPageRoute(
                               builder: (context) => DetailEventScreen(
                                 uId: widget.uId,
-                                imgUrl: documentSnapshot!["imgurl"],
+                                eventId: documentSnapshot!.id,
+                                imgUrl: documentSnapshot["imgurl"],
                                 title: documentSnapshot["eventtitle"],
                                 startDate: documentSnapshot["startdate"],
                                 endDate: documentSnapshot["enddate"],

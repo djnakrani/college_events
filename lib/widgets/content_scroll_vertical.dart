@@ -65,7 +65,6 @@ class ContentScrollVertical extends StatelessWidget {
                   .where("startdate", isGreaterThan: new DateTime.now())
                   .orderBy("startdate", descending: false)
                   .snapshots(),
-          // stream: objEventDetails.snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');
@@ -117,6 +116,7 @@ class ContentScrollVertical extends StatelessWidget {
                                   description: documentSnapshot["description"],
                                   maxparticipate:
                                       documentSnapshot["maxparticipate"],
+                                  eventId: documentSnapshot.id,
                                 ),
                               ),
                             );
@@ -132,7 +132,15 @@ class ContentScrollVertical extends StatelessWidget {
                               Positioned(
                                 child: Container(
                                   child: Text(
-                                    documentSnapshot["eventtitle"],
+                                    uId == 1
+                                        ? documentSnapshot["eventtitle"]
+                                        : documentSnapshot["whomfor"] == "Male"
+                                            ? '${documentSnapshot["eventtitle"]} - Male'
+                                            : documentSnapshot["whomfor"] ==
+                                                    "Female"
+                                                ? '${documentSnapshot["eventtitle"]} - Female'
+                                                : (documentSnapshot[
+                                                    "eventtitle"]),
                                     style: GoogleFonts.openSans(
                                         color: Colors.black,
                                         fontSize: 20,

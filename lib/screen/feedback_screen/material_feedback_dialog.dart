@@ -31,7 +31,7 @@ class MaterialFeedbackDialog extends StatelessWidget {
         textBoxWidget: feedbackTextBox,
       ),
       actions: [
-        FlatButton(
+        MaterialButton(
           onPressed: () {
             Navigator.of(context).pop();
             if (widget.onAskLaterCallback is Function) {
@@ -40,7 +40,7 @@ class MaterialFeedbackDialog extends StatelessWidget {
           },
           child: Text(widget.askLaterText),
         ),
-        FlatButton(
+        MaterialButton(
           onPressed: () => widget.onSubmitCallback({
             'rating': rating,
             'feedback': feedbackEditingController.text,

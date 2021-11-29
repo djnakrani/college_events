@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ForgotScreen extends StatefulWidget {
+class StudentPasswordScreen extends StatefulWidget {
   final int uId;
-  ForgotScreen(this.uId);
+  final String email;
+
+  StudentPasswordScreen({required this.uId, required this.email});
 
   @override
-  _ForgotScreenState createState() => _ForgotScreenState();
+  _StudentPasswordScreenState createState() => _StudentPasswordScreenState();
 }
 
-class _ForgotScreenState extends State<ForgotScreen> {
-  late String _email;
+class _StudentPasswordScreenState extends State<StudentPasswordScreen> {
   final auth = FirebaseAuth.instance;
   final _formForgotKey = GlobalKey<FormState>();
 
@@ -75,20 +76,20 @@ class _ForgotScreenState extends State<ForgotScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            labelText: 'Enter Registered Email ID'),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "This Field Is Required";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          _email = value;
-                        },
-                      ),
+                      // TextFormField(
+                      //   decoration: InputDecoration(
+                      //       labelText: 'Enter Registered Email ID'),
+                      //   keyboardType: TextInputType.emailAddress,
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return "This Field Is Required";
+                      //     }
+                      //     return null;
+                      //   },
+                      //   onChanged: (value) {
+                      //     _pwd = value;
+                      //   },
+                      // ),
                       Container(
                         margin: EdgeInsets.only(top: 20),
                         width: MediaQuery.of(context).size.width * 0.78,
@@ -100,16 +101,18 @@ class _ForgotScreenState extends State<ForgotScreen> {
                           onPressed: () {
                             if (_formForgotKey.currentState!.validate()) {
                               auth
-                                  .sendPasswordResetEmail(email: _email)
+                                  .sendPasswordResetEmail(email: widget.email)
                                   .then((value) {
                                 snackBar = SnackBar(
                                     content: Text("Link Send Into Email"));
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => login_page_screen()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            JudgeLoginPageScreen(
+                                                uId: widget.uId)));
                               }).catchError((onError) {
                                 if (onError
                                     .toString()

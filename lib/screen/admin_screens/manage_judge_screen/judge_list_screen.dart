@@ -119,16 +119,18 @@ class _JudgeListScreenState extends State<JudgeListScreen> {
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => JudgeProfileScreen(
-                                        uId: widget.uId,
-                                        gender: documentSnapshot!["gender"],
-                                        emailID: documentSnapshot["emailid"],
-                                        fullName: documentSnapshot["fullname"],
-                                        address: documentSnapshot["address"],
-                                        mobileNo: documentSnapshot["mobileno"],
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => JudgeProfileScreen(
+                                uId: widget.uId,
+                                gender: documentSnapshot!["gender"],
+                                emailID: documentSnapshot["emailid"],
+                                fullName: documentSnapshot["fullname"],
+                                address: documentSnapshot["address"],
+                                mobileNo: documentSnapshot["mobileno"],
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           margin: EdgeInsets.symmetric(

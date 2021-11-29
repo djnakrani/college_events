@@ -15,27 +15,37 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
   late String _eventName, _eventDescription, _place;
-  late int _maxParticispate;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  // late int _maxParticispate;
   final TextEditingController _startDateController =
-      new TextEditingController();
+  new TextEditingController();
   final TextEditingController _endDateController = new TextEditingController();
   final TextEditingController _lastDateController = new TextEditingController();
   final TextEditingController _timeController = new TextEditingController();
 
   CollectionReference objEventDetails =
-      FirebaseFirestore.instance.collection('event_details');
+  FirebaseFirestore.instance.collection('event_details');
   final objNotificationsDetails =
-      FirebaseFirestore.instance.collection("notifications_details");
+  FirebaseFirestore.instance.collection("notifications_details");
+  CollectionReference objJudgeDetails =
+  FirebaseFirestore.instance.collection('judge_details');
   final List<String> whomFor = ["Male", "Female", "Both"];
+
   String _selectedType = "Male";
+  String selectedJudge = "Select Judge";
+  bool isFirstTime = false;
+  String _jId = "KHbDvyE1LbGrqCHnGKD1";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme
+          .of(context)
+          .backgroundColor,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme
+            .of(context)
+            .backgroundColor,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
@@ -66,7 +76,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       _eventName = value.toString();
                     },
                     validator: (val) =>
-                        val!.isEmpty ? "Event Name should not be empty" : null,
+                    val!.isEmpty ? "Event Name should not be empty" : null,
                   ),
                 ),
                 Padding(
@@ -77,7 +87,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       labelText: "Description",
                       border: new OutlineInputBorder(),
                     ),
-                    validator: (val) => val!.isEmpty
+                    validator: (val) =>
+                    val!.isEmpty
                         ? "Event description should not be empty"
                         : null,
                     onChanged: (value) {
@@ -98,20 +109,21 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       _place = value.toString();
                     },
                     validator: (val) =>
-                        val!.isEmpty ? "Event Place should not be empty" : null,
+                    val!.isEmpty ? "Event Place should not be empty" : null,
                   ),
                 ),
                 Padding(
                     padding: EdgeInsets.only(left: 8),
-                    child:
-                        new CalendarPicker(_startDateController, "Event Start Date")),
+                    child: new CalendarPicker(
+                        _startDateController, "Event Start Date")),
                 Padding(
                     padding: EdgeInsets.only(left: 8),
-                    child: new CalendarPicker(_endDateController, "Event End Date")),
+                    child: new CalendarPicker(
+                        _endDateController, "Event End Date")),
                 Padding(
                     padding: EdgeInsets.only(left: 8),
-                    child:
-                        new CalendarPicker(_lastDateController, "Last Applying Date for Event")),
+                    child: new CalendarPicker(
+                        _lastDateController, "Last Applying Date for Event")),
                 Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: new TimePicker(_timeController, "Event Time")),
@@ -127,7 +139,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         Text("Whom For   :   "),
                         Expanded(
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             child: DropdownButton<String>(
                               value: _selectedType,
                               underline: Container(
@@ -141,17 +156,90 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 });
                               },
                               items: whomFor.map<DropdownMenuItem<String>>(
-                                  (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(value),
-                                  ),
-                                );
-                              }).toList(),
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(value),
+                                      ),
+                                    );
+                                  }).toList(),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: EdgeInsets.only(top: 10.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    side: BorderSide(color: Colors.black45, width: 0.8),
+                  ),
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Text("Assign Judge   :   "),
+                        Expanded(
+                          child: Container(
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                              child: StreamBuilder<QuerySnapshot>(
+                                stream: objJudgeDetails.snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text('Something went wrong');
+                                  } else if (snapshot.hasData &&
+                                      snapshot.data?.docs.length != 0) {
+                                    Iterable<String> name = snapshot.data!.docs
+                                        .map((e) => e.get('fullname'));
+
+                                    final List<String> myDemo = [
+                                      "Select Judge"
+                                    ];
+                                    for (final element in name) {
+                                      myDemo.add(element);
+                                    }
+
+                                    return DropdownButton<String>(
+                                      value: selectedJudge,
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.white,
+                                      ),
+                                      style: GoogleFonts.openSans(
+                                          color: Colors.black),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          selectedJudge = newValue!;
+                                          print(selectedJudge);
+                                        });
+                                      },
+                                      elevation: 16,
+                                      menuMaxHeight: 200,
+                                      items: myDemo
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                    8.0),
+                                                child: Text(value),
+                                              ),
+                                            );
+                                          }).toList(),
+                                    );
+                                  }
+                                  return Container(
+                                      height: 100,
+                                      child: Center(child: Text("NO DATA")));
+                                },
+                              )),
                         ),
                       ],
                     ),
@@ -170,11 +258,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       // _maxParticispate = value.toString();
                     },
                     validator: (val) =>
-                        val!.isEmpty ? "Enter Max Participate in Team" : null,
+                    val!.isEmpty ? "Enter Max Participate in Team" : null,
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: new MaterialButton(
                     child: Padding(
@@ -187,8 +278,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             fontSize: 18),
                       ),
                     ),
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     onPressed: () {
+                      if (selectedJudge != "Select Judge") {
+                        final id = objJudgeDetails
+                            .where('fullname', isEqualTo: selectedJudge)
+                            .get()
+                            .then((value) => value.docs.first.id);
+                        getUserId(id);
+                      } else {
+                        _jId = "KHbDvyE1LbGrqCHnGKD1";
+                      }
+                      print(_jId);
                       if (_formKey.currentState!.validate()) {
                         String timeFormat = "EEE, MMM d, yyyy";
                         String dateTimeFormat = "EEE, MMM d, yyyy 'at' h:mm a";
@@ -203,29 +306,33 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
                         objEventDetails
                             .add({
-                              'eventtitle': _eventName,
-                              'description': _eventDescription,
-                              'startdate': Timestamp.fromDate(sDate),
-                              'enddate': Timestamp.fromDate(eDate),
-                              'lastdate': Timestamp.fromDate(lDate),
-                              'time': Timestamp.fromDate(time),
-                              'place': _place,
-                              'maxparticipate': 2,
-                              'whomfor': _selectedType,
-                              'imgurl': 'images/tugofwar.jpg',
-                            })
-                            .then((value) => objNotificationsDetails
+                          'eventtitle': _eventName,
+                          'description': _eventDescription,
+                          'startdate': Timestamp.fromDate(sDate),
+                          'enddate': Timestamp.fromDate(eDate),
+                          'lastdate': Timestamp.fromDate(lDate),
+                          'time': Timestamp.fromDate(time),
+                          'place': _place,
+                          'maxparticipate': 2,
+                          'whomfor': _selectedType,
+                          'judgeid': _jId,
+                          'imgurl': 'images/tugofwar.jpg',
+                        })
+                            .then((value) =>
+                            objNotificationsDetails
                                 .add({
-                                  'notificationtitle': _eventName,
-                                  'notificationdescription':
-                                      'event is created and last date for apply in event is ${_lastDateController.text}',
-                                  'datetime': Timestamp.now(),
-                                })
+                              'notificationtitle': _eventName,
+                              'notificationdescription':
+                              'event is created and last date for apply in event is ${_lastDateController
+                                  .text}',
+                              'datetime': Timestamp.now(),
+                            })
                                 .then((value) => Navigator.pop(context))
-                                .catchError((error) => print(
+                                .catchError((error) =>
+                                print(
                                     "Failed to add Notification: $error")))
                             .catchError((error) =>
-                                print("Failed to add Notification: $error"));
+                            print("Failed to add Notification: $error"));
                       }
                     },
                   ),
@@ -236,5 +343,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> getUserId(futureString) async {
+    final jId = await futureString;
+    setState(() => _jId = jId);
   }
 }
