@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -15,6 +16,7 @@ class StudentLoginPageScreen extends StatefulWidget {
 class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
   late String _enrollno;
   final auth = FirebaseAuth.instance;
+  CollectionReference objStudentDetails =  FirebaseFirestore.instance.collection('student_details');
   final _formSigninKey = GlobalKey<FormState>();
   late SnackBar snackBar;
 
@@ -98,7 +100,9 @@ class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
                                   "LOGIN",
                                   style: GoogleFonts.openSans(fontSize: 20),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  login_second(_enrollno);
+                                },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
                                 color: Theme.of(context).primaryColor,
@@ -112,7 +116,8 @@ class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => LoginAsScreen()));
+                                        builder: (context) => LoginAsScreen())
+                                        );
                               },
                               child: Text(
                                 'Back to LOGIN AS',
@@ -142,5 +147,10 @@ class _StudentLoginPageScreenState extends State<StudentLoginPageScreen> {
     } else {
       snackBar = SnackBar(content: Text("Something Went Wrong..."));
     }
+  }
+
+  Future<void> login_second(String enrollno) async {
+    objStudentDetails.where('enrollmentno',isEqualTo: enrollno).snapshots().listen((event) {
+    });
   }
 }
