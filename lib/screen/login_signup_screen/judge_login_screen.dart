@@ -1,16 +1,17 @@
 import 'package:college_events/screen/home_screen/home_screen.dart';
 import 'package:college_events/screen/login_signup_screen/judge_signup_screen.dart';
 import 'package:college_events/screen/login_signup_screen/forgot_screen.dart';
+import 'package:college_events/screen/login_signup_screen/student_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'loginas_screen.dart';
 
 class JudgeLoginPageScreen extends StatefulWidget {
-  int uId;
+  final int uId;
+
   JudgeLoginPageScreen({required this.uId});
 
   @override
@@ -18,7 +19,6 @@ class JudgeLoginPageScreen extends StatefulWidget {
 }
 
 class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
-
   late String _email, _password;
   final auth = FirebaseAuth.instance;
   final _formSigninKey = GlobalKey<FormState>();
@@ -40,7 +40,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
               Center(
                 child: SingleChildScrollView(
                   child: Card(
-                    margin: EdgeInsets.symmetric(horizontal: 15,vertical: 40),
+                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 40),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     child: Container(
@@ -73,10 +73,13 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(bottom: 10,top: 5),
+                              margin: EdgeInsets.only(bottom: 10, top: 5),
                               child: Text(
                                 widget.uId == 2
-                                    ? "Judge" : "Admin",
+                                    ? "Judge"
+                                    : widget.uId == 0
+                                        ? "Admin"
+                                        : "Student",
                                 style: GoogleFonts.openSans(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
@@ -98,7 +101,8 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               },
                             ),
                             TextFormField(
-                              decoration: InputDecoration(labelText: 'Password '),
+                              decoration:
+                                  InputDecoration(labelText: 'Password '),
                               // keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
                               validator: (value) {
@@ -117,37 +121,40 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                             Container(
                               child: Align(
                                 alignment: Alignment.centerRight,
-                                child: FlatButton(
+                                child: MaterialButton(
                                   onPressed: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ForgotScreen(uId: widget.uId)));
+                                            builder: (context) =>
+                                                ForgotScreen(widget.uId)));
                                   },
                                   child: Text(
                                     'Forgot Password?',
-                                    style: GoogleFonts.openSans(color: Colors.red, fontSize: 15),
+                                    style: GoogleFonts.openSans(
+                                        color: Colors.red, fontSize: 15),
                                   ),
                                 ),
                               ),
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.78,
-                              child: RaisedButton(
+                              child: MaterialButton(
                                 child: Text(
                                   "LOGIN",
                                   style: GoogleFonts.openSans(fontSize: 20),
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formSigninKey.currentState!.validate()) {
                                     auth
                                         .signInWithEmailAndPassword(
                                             email: _email, password: _password)
                                         .then((value) {
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomeScreen(uId: widget.uId,)));
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                              builder: (context) => HomeScreen(
+                                                    uId: widget.uId,
+                                                  )));
                                     }).catchError((onError) {
                                       ShowError(onError);
                                       ScaffoldMessenger.of(context)
@@ -163,36 +170,45 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                               ),
                             ),
                             Container(
-                              child:  widget.uId == 2
-                                  ? FlatButton(
-                                padding: EdgeInsets.all(8.0),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              JudgeSignupScreen(uId: widget.uId)));
-                                },
-                                child: Text(
-                                  'New User?  REGISTER',
-                                  style:
-                                      GoogleFonts.openSans(color: Theme.of(context).primaryColor, fontSize: 16,fontWeight: FontWeight.w700),
-                                ),
-                              ):SizedBox(),
+                              child: widget.uId != 0
+                                  ? MaterialButton(
+                                      padding: EdgeInsets.all(8.0),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    widget.uId == 1
+                                                        ? StudentRegisterScreen(
+                                                            uId: widget.uId)
+                                                        : JudgeSignupScreen(
+                                                            uId: widget.uId)));
+                                      },
+                                      child: Text(
+                                        widget.uId == 1?"Don't have credentials?? REGISTER":'New User?  REGISTER',
+                                        style: GoogleFonts.openSans(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    )
+                                  : SizedBox(),
                             ),
                             Container(
                               // margin: EdgeInsets.only(bottom: 10,top: 5),
-                              child:  widget.uId == 2
+                              child: widget.uId != 0
                                   ? Text(
-                                "Or",
-                                style: GoogleFonts.openSans(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 18),
-                                textAlign: TextAlign.center,
-                              ) : SizedBox(),
+                                      "Or",
+                                      style: GoogleFonts.openSans(
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 17),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  : SizedBox(),
                             ),
-                            FlatButton(
+                            MaterialButton(
                               padding: EdgeInsets.all(8.0),
                               onPressed: () {
                                 Navigator.pushReplacement(

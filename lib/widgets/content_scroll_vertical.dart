@@ -8,7 +8,7 @@ class ContentScrollVertical extends StatelessWidget {
   final String mainTitle;
   final double imageHeight;
   final double imageWidth;
-  int uId;
+  final int uId;
 
   ContentScrollVertical({
     required this.uId,
@@ -51,17 +51,6 @@ class ContentScrollVertical extends StatelessWidget {
                   style: GoogleFonts.openSans(
                       fontWeight: FontWeight.bold, fontSize: 15),
                 ),
-                // Row(
-                //   children: [
-                //     Text("See All",style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontSize: 15),),
-                //     Icon(
-                //       Icons.arrow_forward,
-                //       color: Colors.black,
-                //       size: 22.0,
-                //     ),
-                //   ],
-                // ),
-                // child: Text("See All"),
               ),
             ],
           ),
@@ -109,12 +98,13 @@ class ContentScrollVertical extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                         child: GestureDetector(
                           onTap: () {
+                            print("Doc id is : ${documentSnapshot!.id}");
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailEventScreen(
                                   uId: uId,
-                                  imgUrl: documentSnapshot!["imgurl"],
+                                  imgUrl: documentSnapshot["imgurl"],
                                   title: documentSnapshot["eventtitle"],
                                   startDate: documentSnapshot["startdate"],
                                   endDate: documentSnapshot["enddate"],
@@ -126,6 +116,7 @@ class ContentScrollVertical extends StatelessWidget {
                                   description: documentSnapshot["description"],
                                   maxparticipate:
                                       documentSnapshot["maxparticipate"],
+                                  eventId: documentSnapshot.id,
                                 ),
                               ),
                             );
@@ -141,7 +132,15 @@ class ContentScrollVertical extends StatelessWidget {
                               Positioned(
                                 child: Container(
                                   child: Text(
-                                    documentSnapshot["eventtitle"],
+                                    uId == 1
+                                        ? documentSnapshot["eventtitle"]
+                                        : documentSnapshot["whomfor"] == "Male"
+                                            ? '${documentSnapshot["eventtitle"]} - Male'
+                                            : documentSnapshot["whomfor"] ==
+                                                    "Female"
+                                                ? '${documentSnapshot["eventtitle"]} - Female'
+                                                : (documentSnapshot[
+                                                    "eventtitle"]),
                                     style: GoogleFonts.openSans(
                                         color: Colors.black,
                                         fontSize: 20,

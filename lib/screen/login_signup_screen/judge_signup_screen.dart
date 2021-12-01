@@ -17,9 +17,8 @@ class _JudgeSignupScreenState extends State<JudgeSignupScreen>{
   late String _name,_email,_mono,_password,_cpassword;
   final auth = FirebaseAuth.instance;
   final _formSignupKey = GlobalKey<FormState>();
-
-
   late SnackBar snackBar;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

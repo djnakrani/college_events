@@ -1,6 +1,6 @@
 import 'package:college_events/screen/feedback_screen/quick_feedback.dart';
-// import 'package:college_events/screen/feedback_screen/widgets/feedback_content.dart';
-// import 'package:college_events/screen/feedback_screen/widgets/feedback_title.dart';
+import 'package:college_events/screen/feedback_screen/widgets/feedback_content.dart';
+import 'package:college_events/screen/feedback_screen/widgets/feedback_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -24,30 +24,30 @@ class MaterialFeedbackDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-    //   title: FeedbackTitle(widget: widget, currentFace: currentFace),
-    //   content: FeedbackContent(
-    //     stars: stars,
-    //     widget: widget,
-    //     textBoxWidget: feedbackTextBox,
-    //   ),
-    //   actions: [
-    //     FlatButton(
-    //       onPressed: () {
-    //         Navigator.of(context).pop();
-    //         if (widget.onAskLaterCallback is Function) {
-    //           widget.onAskLaterCallback();
-    //         }
-    //       },
-    //       child: Text(widget.askLaterText),
-    //     ),
-    //     FlatButton(
-    //       onPressed: () => widget.onSubmitCallback({
-    //         'rating': rating,
-    //         'feedback': feedbackEditingController.text,
-    //       }),
-    //       child: Text(widget.submitText),
-    //     )
-    //   ],
+      title: FeedbackTitle(widget: widget, currentFace: currentFace),
+      content: FeedbackContent(
+        stars: stars,
+        widget: widget,
+        textBoxWidget: feedbackTextBox,
+      ),
+      actions: [
+        FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            if (widget.onAskLaterCallback is Function) {
+              widget.onAskLaterCallback();
+            }
+          },
+          child: Text(widget.askLaterText),
+        ),
+        FlatButton(
+          onPressed: () => widget.onSubmitCallback({
+            'rating': rating,
+            'feedback': feedbackEditingController.text,
+          }),
+          child: Text(widget.submitText),
+        )
+      ],
     );
   }
 }

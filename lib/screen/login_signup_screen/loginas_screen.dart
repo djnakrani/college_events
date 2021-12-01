@@ -1,5 +1,5 @@
 import 'package:college_events/screen/login_signup_screen/judge_login_screen.dart';
-import 'package:college_events/screen/login_signup_screen/student_login_screen.dart';
+import 'package:college_events/screen/login_signup_screen/student_register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,7 +54,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                 Container(
                   margin: EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width * 0.82,
-                  child: RaisedButton(
+                  child: MaterialButton(
                     child: Text(
                       "LOGIN AS",
                       style: GoogleFonts.openSans(fontSize: 20),
@@ -70,7 +70,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       Container(
-                                        child: RaisedButton(
+                                        child: MaterialButton(
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 10.0),
@@ -100,7 +100,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                                 0.78,
                                       ),
                                       Container(
-                                        child: RaisedButton(
+                                        child: MaterialButton(
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 10.0),
@@ -118,7 +118,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    StudentLoginPageScreen(
+                                                    StudentRegisterScreen(
                                                   uId: 1,
                                                 ),
                                               ),
@@ -131,7 +131,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                         margin: EdgeInsets.only(top: 3),
                                       ),
                                       Container(
-                                        child: RaisedButton(
+                                        child: MaterialButton(
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 10.0),

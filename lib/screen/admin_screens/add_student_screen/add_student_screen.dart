@@ -266,7 +266,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                         objStudentDetails
                             .add({
                               'fullname': _fullName,
-                              'enrollmentno': _enrollNumber,
+                              // 'enrollmentno': _enrollNumber,
                               'dateofbirth': Timestamp.fromDate(dob),
                               'gender': _selectedGender,
                               'mobileno': _mobileNumber,

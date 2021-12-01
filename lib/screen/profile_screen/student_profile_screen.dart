@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StudentProfileScreen extends StatefulWidget {
   final int pId;
-  StudentProfileScreen({required this.pId});
+  final String emailId;
+  final String enrollNo;
+  final String fullName;
+  final String gender;
+  final String mono;
+  final String clgName;
+  final String sClass;
 
+  StudentProfileScreen({required this.pId, required this.emailId, required this.enrollNo, required this.fullName, required this.gender, required this.mono, required this.clgName, required this.sClass});
   @override
   State<StatefulWidget> createState() {
     return _StudentProfileScreenState();
@@ -13,31 +21,33 @@ class StudentProfileScreen extends StatefulWidget {
 }
 
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
+
+
   List<String> items = <String>[
     "Enrollment Number",
-    "Roll Number",
+    "Class",
     "Gender",
     "Date of Birth",
     "Email Id",
     "Mobile Number",
-    "Blood Group",
-    "Address",
     "College Name",
   ];
-  List<String> items1 = <String>[
-    "205690694039",
-    "92",
-    "Male",
-    "08-05-2000",
-    "kashyap@gmail.com",
-    "9889898989",
-    "A+",
-    "Surat",
-    "GMCA",
-  ];
 
+  @override void initState() {
+    super.initState();
+    // _getPrefData();
+  }
   @override
   Widget build(BuildContext context) {
+    List<String> items1 = <String>[
+      widget.enrollNo,
+      widget.sClass,
+      widget.gender,
+      "08-05-2000",
+      widget.emailId,
+      widget.mono,
+      widget.clgName,
+    ];
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -45,8 +55,12 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Participate Details",
-          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
+          widget.pId == 0 ? "Profile" :"Participate Details",
+          style: GoogleFonts.openSans(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -63,8 +77,9 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               padding: EdgeInsets.symmetric(vertical: 10),
               margin: EdgeInsets.only(bottom: 10),
               child: Text(
-                "Kashyap Ghanshyambhai Kalathiya",
-                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 26),
+                widget.fullName,
+                style: GoogleFonts.openSans(
+                    fontWeight: FontWeight.w600, fontSize: 26),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -76,34 +91,36 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 return ListTile(
                   title: Text(
                     '${items[index]} : ${items1[index]}',
-                    style: GoogleFonts.openSans(color: Colors.black, fontSize: 20),
+                    style:
+                        GoogleFonts.openSans(color: Colors.black, fontSize: 20),
                   ),
                   dense: true,
                 );
               },
             ),
-            widget.pId == 0 ? Container(
-              child: MaterialButton(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    "Edit",
-                    style: GoogleFonts.openSans(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 18),
-                  ),
-                ),
-                color: Theme.of(context).primaryColor,
-                onPressed: () {},
-              ),
-              width: MediaQuery.of(context).size.width * 0.78,
-              margin: EdgeInsets.all(15),
-            ) : SizedBox(),
+            widget.pId == 0
+                ? Container(
+                    child: MaterialButton(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          "Edit",
+                          style: GoogleFonts.openSans(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18),
+                        ),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {},
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.78,
+                    margin: EdgeInsets.all(15),
+                  )
+                : SizedBox(),
           ],
         ),
       ),
     );
   }
 }
-

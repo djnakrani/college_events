@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/participate_screen/participate_name_screen.dart';
 import 'package:college_events/screen/team_screen/team_name_screen.dart';
+import 'package:college_events/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailEventScreen extends StatefulWidget {
   final int uId;
+  final String eventId;
   final String imgUrl;
   final String title;
   final Timestamp startDate;
@@ -32,7 +35,8 @@ class DetailEventScreen extends StatefulWidget {
       required this.description,
       required this.whomFor,
       required this.mainTitle,
-      required this.maxparticipate});
+      required this.maxparticipate,
+      required this.eventId});
 
   @override
   State<StatefulWidget> createState() {
@@ -43,9 +47,14 @@ class DetailEventScreen extends StatefulWidget {
 class _DetailEventScreenState extends State<DetailEventScreen> {
   var dateFormatter = new DateFormat('dd-MM-yyyy');
   var timeFormatter = new DateFormat('kk:mm');
+  final objParticipateDetails =
+      FirebaseFirestore.instance.collection("participate_details");
+
+  late String enrollNo;
 
   @override
   Widget build(BuildContext context) {
+    getPrefData();
     DateTime sDate = widget.startDate.toDate();
     DateTime eDate = widget.endDate.toDate();
     DateTime lDate = widget.lastDate.toDate();
@@ -107,7 +116,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  widget.mainTitle == "Upcoming Events"
+                  widget.uId == 0 && widget.mainTitle == "Upcoming Events"
                       ? IconButton(
                           padding: EdgeInsets.only(top: 10, right: 15.0),
                           onPressed: () {
@@ -268,7 +277,7 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
                       materialButtonText(),
                       style: GoogleFonts.openSans(fontSize: 20),
                     ),
-                    onPressed: () => clickMaterialButton(),
+                    onPressed: () => clickMaterialButton(context),
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
                     padding: EdgeInsets.all(8.0),
@@ -296,16 +305,32 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
     }
   }
 
-  clickMaterialButton() {
+  clickMaterialButton(BuildContext context) {
     if (widget.mainTitle == "Today Events" ||
-        widget.mainTitle == "Upcoming Events" && widget.uId == 1) {
+        widget.mainTitle == "Upcoming Events" && widget.uId == 0) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => ParticipateNameScreen()));
     } else if (widget.mainTitle == "Upcoming Events" && widget.uId == 1) {
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => TeamNameScreen()));
+      objParticipateDetails
+          .where('studentid', isEqualTo: enrollNo)
+          .where('eventid', isEqualTo: widget.eventId)
+          .get()
+          .then((value) {
+        if (value.docs.first.exists) {
+          dialog_box(context,"You Already Apply","You can check it in your events.");
+        } else {
+          print("value nathi");
+        }
+      }).catchError((e) {
+        objParticipateDetails
+            .add({
+              'studentid': enrollNo,
+              'eventid': widget.eventId,
+              'date': Timestamp.now(),
+            })
+            .then((value) => dialog_box(context,"Successfully Applied","You can check it in your events"))
+            .catchError((error) => print("Failed to add Notification: $error"));
+      });
     } else if (widget.mainTitle == "Today Events" ||
         widget.mainTitle == "Upcoming Events" && widget.uId == 2) {
       Navigator.push(context,
@@ -316,5 +341,10 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
     } else {
       return "";
     }
+  }
+
+  getPrefData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    enrollNo = prefs.getString("stdId")!;
   }
 }

@@ -2,19 +2,50 @@ import 'package:college_events/screen/admin_screens/add_student_screen/class_lis
 import 'package:college_events/screen/admin_screens/create_event_screen/add_events_list_screen.dart';
 import 'package:college_events/screen/admin_screens/manage_judge_screen/judge_list_screen.dart';
 import 'package:college_events/screen/events_screen/events_list_screen.dart';
+import 'package:college_events/screen/feedback_screen/quick_feedback.dart';
 import 'package:college_events/screen/gallery_screen/gallery_screen.dart';
+import 'package:college_events/screen/login_signup_screen/loginas_screen.dart';
 import 'package:college_events/screen/profile_screen/student_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class navigationDrawer extends StatelessWidget {
   final int uId;
+  final String fName;
+  final String email;
+
   navigationDrawer({
-    required this.uId,
+    required this.uId, required this.fName, required this.email,
   });
+
+  // late String emailId = "";
+  late String enrollNo = "";
+  // late String fullName = "";
+  late String gender = "";
+  late String mono = "";
+  late String clgName = "";
+  late String sClass = "";
+
+  logoutPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  getPrefData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // emailId = prefs.getString("emailId")!;
+    sClass = prefs.getString("class")!;
+    // fullName = prefs.getString("fullname")!;
+    enrollNo = prefs.getString("stdId")!;
+    gender = prefs.getString("gender")!;
+    mono = prefs.getString("mobileno")!;
+    clgName = prefs.getString("collegename")!;
+  }
 
   @override
   Widget build(BuildContext context) {
+    getPrefData();
     return Drawer(
       child: Container(
         color: Theme.of(context).backgroundColor,
@@ -36,7 +67,16 @@ class navigationDrawer extends StatelessWidget {
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => StudentProfileScreen(pId: 0),
+                              builder: (context) => StudentProfileScreen(
+                                pId: 0,
+                                gender: gender,
+                                enrollNo: enrollNo,
+                                sClass: sClass,
+                                clgName: clgName,
+                                mono: mono,
+                                fullName: fName,
+                                emailId: email,
+                              ),
                             ))
                         : SizedBox();
               },
@@ -53,7 +93,9 @@ class navigationDrawer extends StatelessWidget {
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddEventsScreen(uId: uId,),
+                          builder: (context) => AddEventsScreen(
+                            uId: uId,
+                          ),
                         ))
                     : uId == 2
                         ? Navigator.push(
@@ -75,18 +117,21 @@ class navigationDrawer extends StatelessWidget {
                             ));
               },
             ),
-            if (uId == 0) createDrawerBodyItem(
-              icon: Icons.contact_page,
-              text: 'Manage Judge',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => JudgeListScreen(uId: uId,),
-                  ),
-                );
-              },
-            ),
+            if (uId == 0)
+              createDrawerBodyItem(
+                icon: Icons.contact_page,
+                text: 'Manage Judge',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => JudgeListScreen(
+                        uId: uId,
+                      ),
+                    ),
+                  );
+                },
+              ),
             createDrawerBodyItem(
               icon: Icons.collections,
               text: 'Gallery',
@@ -103,12 +148,12 @@ class navigationDrawer extends StatelessWidget {
               icon: Icons.contact_page,
               text: 'About Institute',
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => JudgeListScreen(uId: uId,),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => JudgeListScreen(uId: uId,),
+                //   ),
+                // );
               },
             ),
             createDrawerBodyItem(
@@ -118,21 +163,41 @@ class navigationDrawer extends StatelessWidget {
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
-                //     builder: (context) => GalleryScreen(),
+                //     builder: (context) => FeedbackScreen(),
                 //   ),
                 // );
+                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return QuickFeedback(
+                      title: 'Feedback',
+                      showTextBox: true,
+                      textBoxHint: 'Share your Thoughts',
+                      submitText: 'SUBMIT',
+                      onSubmitCallback: (feedback) {
+                        print('${feedback['rating']}');
+                        Navigator.of(context).pop();
+                      },
+                      askLaterText: 'ASK LATER',
+                      onAskLaterCallback: () {
+                        print('Do something on ask later click');
+                      },
+                    );
+                  },
+                );
               },
             ),
             createDrawerBodyItem(
               icon: Icons.logout,
               text: 'Logout',
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => GalleryScreen(),
-                //   ),
-                // );
+                logoutPreferences();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => LoginAsScreen()),
+                    ModalRoute.withName('/'));
               },
             ),
             ListTile(
@@ -175,7 +240,7 @@ class navigationDrawer extends StatelessWidget {
               margin: EdgeInsets.only(top: 15),
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "Kashyap Kalathiya",
+                fName,
                 style: GoogleFonts.openSans(
                     color: Colors.black,
                     fontSize: 20.0,
@@ -188,7 +253,7 @@ class navigationDrawer extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  "Kashyapkalathiya654@gmail.com",
+                  email,
                   style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 16.0,

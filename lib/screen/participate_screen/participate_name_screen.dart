@@ -60,12 +60,12 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                 ),
               ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StudentProfileScreen(pId : 1),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => StudentProfileScreen(pId : 1),
+                //   ),
+                // );
               },
             );
           },
