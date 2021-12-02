@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class StudentProfileScreen extends StatefulWidget {
   final int pId;
@@ -21,8 +20,6 @@ class StudentProfileScreen extends StatefulWidget {
 }
 
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
-
-
   List<String> items = <String>[
     "Enrollment Number",
     "Class",
@@ -35,7 +32,6 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
 
   @override void initState() {
     super.initState();
-    // _getPrefData();
   }
   @override
   Widget build(BuildContext context) {

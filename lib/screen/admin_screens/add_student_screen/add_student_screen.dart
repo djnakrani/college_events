@@ -90,6 +90,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(color: Colors.black45, width: 0.8),
                   ),
+                  color: Theme.of(context).backgroundColor,
                   child: ListTile(
                     title: Row(
                       children: [
@@ -101,7 +102,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                               value: _selectedGender,
                               underline: Container(
                                 height: 2,
-                                color: Colors.white,
+                                color: Theme.of(context).backgroundColor,
                               ),
                               style: GoogleFonts.openSans(color: Colors.black),
                               onChanged: (String? newValue) {
@@ -160,6 +161,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 ),
                 Card(
                   margin: EdgeInsets.only(top: 10.0),
+                  color: Theme.of(context).backgroundColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(color: Colors.black45, width: 0.8),
@@ -175,7 +177,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                               value: _selectedClass,
                               underline: Container(
                                 height: 2,
-                                color: Colors.white,
+                                color: Theme.of(context).backgroundColor,
                               ),
                               style: GoogleFonts.openSans(color: Colors.black),
                               onChanged: (String? newValue) {
@@ -202,6 +204,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 ),
                 Card(
                   margin: EdgeInsets.only(top: 10.0, bottom: 25),
+                  color: Theme.of(context).backgroundColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(color: Colors.black45, width: 0.8),
@@ -217,7 +220,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                               value: _selectedClg,
                               underline: Container(
                                 height: 2,
-                                color: Colors.white,
+                                color: Theme.of(context).backgroundColor,
                               ),
                               style: GoogleFonts.openSans(color: Colors.black),
                               onChanged: (String? newValue) {

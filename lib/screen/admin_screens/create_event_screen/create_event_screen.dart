@@ -129,6 +129,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     child: new TimePicker(_timeController, "Event Time")),
                 Card(
                   margin: EdgeInsets.only(top: 20.0),
+                  color: Theme.of(context).backgroundColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(color: Colors.black45, width: 0.8),
@@ -147,7 +148,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               value: _selectedType,
                               underline: Container(
                                 height: 2,
-                                color: Colors.white,
+                                color: Theme.of(context).backgroundColor,
                               ),
                               style: GoogleFonts.openSans(color: Colors.black),
                               onChanged: (String? newValue) {
@@ -174,6 +175,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 ),
                 Card(
                   margin: EdgeInsets.only(top: 10.0),
+                  color: Theme.of(context).backgroundColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(color: Colors.black45, width: 0.8),
@@ -209,7 +211,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                       value: selectedJudge,
                                       underline: Container(
                                         height: 2,
-                                        color: Colors.white,
+                                        color: Theme.of(context).backgroundColor,
                                       ),
                                       style: GoogleFonts.openSans(
                                           color: Colors.black),

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:college_events/screen/profile_screen/student_profile_screen.dart';
-import 'package:college_events/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ParticipateNameScreen extends StatefulWidget {
+class ParticipateScoreScreen extends StatefulWidget {
   final String eventId;
   final String eventName;
   final int uId;
@@ -12,7 +10,7 @@ class ParticipateNameScreen extends StatefulWidget {
   final DateTime eDate;
   final num maxParticipate;
 
-  ParticipateNameScreen(
+  ParticipateScoreScreen(
       {required this.eventId,
       required this.maxParticipate,
       required this.sDate,
@@ -25,11 +23,11 @@ class ParticipateNameScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _ParticipateNameScreenState();
+    return _ParticipateScoreScreenState();
   }
 }
 
-class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
+class _ParticipateScoreScreenState extends State<ParticipateScoreScreen> {
   final objStudentDetails =
       FirebaseFirestore.instance.collection("student_details");
   final objParticipateDetails =
@@ -78,26 +76,6 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            (widget.maxParticipate == 1 &&
-                    widget.dateAddOneEnd.isBefore(widget.dateNow))
-                ? SizedBox()
-                : Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      child: Text(
-                        "Participates Details",
-                        style: GoogleFonts.openSans(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ),
-                  ),
-            (widget.maxParticipate == 1 &&
-                    widget.dateAddOneEnd.isBefore(widget.dateNow))
-                ? SizedBox()
-                : streamBuilder(0),
             widget.maxParticipate == 1 &&
                     (widget.sDate.isAtSameMomentAs(widget.dateNow) ||
                         widget.sDate.isBefore(widget.dateNow))
@@ -128,15 +106,10 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
 
   Widget streamBuilder(isScore) {
     return StreamBuilder<QuerySnapshot>(
-      stream: isScore == 0
-          ? objParticipateDetails
-              .where("eventid", isEqualTo: widget.eventId)
-              .where("isscore", isEqualTo: false)
-              .snapshots()
-          : objParticipateDetails
-              .where("eventid", isEqualTo: widget.eventId)
-              .where("isscore", isEqualTo: true)
-              .snapshots(),
+      stream: objParticipateDetails
+          .where("eventid", isEqualTo: widget.eventId)
+          .orderBy("score",descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         print("Snapshot : $snapshot");
         if (snapshot.hasError) {
@@ -188,89 +161,22 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                         ),
                       ),
                       onTap: () {
-                        if (widget.maxParticipate == 1 &&
-                            isScore == 0 &&
-                            widget.uId == 2 &&
-                            widget.sDate.isBefore(widget.dateNow) &&
-                            widget.dateAddOneEnd.isAfter(widget.dateNow)) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return DialogBox(
-                                title: "Give Score",
-                                subtitle: "Name : ${docEvent['fullname']}",
-                                showTextBox: true,
-                                showButton: true,
-                                askLaterText: 'Cancel',
-                                submitText: 'Submit',
-                                hintText: "Enter Score",
-                                onSubmitCallback: (onSubmit) {
-                                  String pScore = onSubmit["text"];
-                                  print(pScore);
-                                  Navigator.of(context).pop();
-                                  objParticipateDetails
-                                      .doc('${documentSnapshot.id}')
-                                      .set(
-                                          {'score': '$pScore', 'isscore': true},
-                                          SetOptions(merge: true));
-                                },
-                                onAskLaterCallback: (feedback) {
-                                  Navigator.of(context).pop();
-                                },
-                              );
-                            },
-                          );
-                        } else if (widget.maxParticipate == 1 &&
-                            isScore == 1 &&
-                            widget.uId == 2 &&
-                            widget.sDate.isBefore(widget.dateNow) &&
-                            widget.dateAddOneEnd.isAfter(widget.dateNow)) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return DialogBox(
-                                title: "Change Score",
-                                subtitle: "Name : ${docEvent['fullname']}",
-                                showTextBox: true,
-                                showButton: true,
-                                askLaterText: 'Cancel',
-                                submitText: 'Update',
-                                hintText: "Enter Score",
-                                textScore: documentSnapshot["score"],
-                                onSubmitCallback: (onSubmit) {
-                                  String pScore = onSubmit["text"];
-                                  print(pScore);
-                                  Navigator.of(context).pop();
-                                  objParticipateDetails
-                                      .doc('${documentSnapshot.id}')
-                                      .set(
-                                          {'score': '$pScore', 'isscore': true},
-                                          SetOptions(merge: true));
-                                },
-                                onAskLaterCallback: (feedback) {
-                                  Navigator.of(context).pop();
-                                },
-                              );
-                            },
-                          );
-                        } else {
-                          print(documentSnapshot.id);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StudentProfileScreen(
-                                pId: 1,
-                                gender: docEvent["gender"],
-                                enrollNo: docEvent.id,
-                                sClass: docEvent["class"],
-                                clgName: docEvent["collegename"],
-                                mono: docEvent["mobileno"],
-                                fullName: docEvent["fullname"],
-                                emailId: docEvent["emailid"],
-                              ),
-                            ),
-                          );
-                        }
+                        // print(documentSnapshot.id);
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => StudentProfileScreen(
+                        //       pId: 1,
+                        //       gender: docEvent["gender"],
+                        //       enrollNo: docEvent.id,
+                        //       sClass: docEvent["class"],
+                        //       clgName: docEvent["collegename"],
+                        //       mono: docEvent["mobileno"],
+                        //       fullName: docEvent["fullname"],
+                        //       emailId: docEvent["emailid"],
+                        //     ),
+                        //   ),
+                        // );
                       },
                     );
                   }
@@ -288,7 +194,8 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
             child: Center(
               child: Text(
                 "NO DATA",
-                style: GoogleFonts.openSans(fontWeight: FontWeight.w600,fontSize: 18),
+                style: GoogleFonts.openSans(
+                    fontWeight: FontWeight.w600, fontSize: 18),
               ),
             ));
       },

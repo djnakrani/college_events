@@ -58,7 +58,7 @@ class _QuickFeedbackState extends State<QuickFeedback> {
     } else {
       return Container(
         child: Center(
-          child: Text('Only Supported for Android and iOS.'),
+          child: Text('Only Supported for Android'),
         ),
       );
     }

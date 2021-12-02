@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddEventsScreen extends StatefulWidget {
-  int uId;
+  final int uId;
+
   AddEventsScreen({required this.uId});
 
   @override
@@ -96,6 +97,7 @@ class _AddEventsScreenState extends State<AddEventsScreen> {
                                 description: documentSnapshot["description"],
                                 maxparticipate:
                                     documentSnapshot["maxparticipate"],
+                                judgeId: documentSnapshot["judgeid"],
                               ),
                             ),
                           );
