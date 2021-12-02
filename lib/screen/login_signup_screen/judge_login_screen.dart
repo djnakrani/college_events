@@ -243,6 +243,24 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
       snackBar = SnackBar(content: Text('User Not Register'));
     } else {
       snackBar = SnackBar(content: Text("Something Went Wrong..."));
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return DialogBox(
+      //       title: "Please enter valid Email or Password",
+      //       subtitle: "",
+      //       showTextBox: false,
+      //       showButton: true,
+      //       askLaterText: 'Ok',
+      //       submitText: 'Submit',
+      //       hintText: "Enter Score",
+      //       onSubmitCallback: (onSubmit) {
+      //       },
+      //       onAskLaterCallback: (feedback) {
+      //       },
+      //     );
+      //   },
+      // );
     }
   }
 }

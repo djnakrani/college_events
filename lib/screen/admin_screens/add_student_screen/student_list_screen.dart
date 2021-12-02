@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/admin_screens/create_event_screen/create_event_screen.dart';
 import 'package:college_events/screen/event_details_screen/details_event_screen.dart';
+import 'package:college_events/screen/profile_screen/student_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StudentListScreen extends StatefulWidget {
   final String title;
-
 
   StudentListScreen({required this.title});
 
@@ -39,6 +39,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: objStudentDetails
+            .where("class", isEqualTo: widget.title)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -54,22 +55,51 @@ class _StudentListScreenState extends State<StudentListScreen> {
                   QueryDocumentSnapshot<Object?>? documentSnapshot =
                       snapshot.data?.docs[index];
                   return ListTile(
-                    leading: Icon(Icons.person,size: 34,),
+                    leading: Icon(
+                      Icons.person,
+                      size: 34,
+                    ),
                     title: Text(
-                      (documentSnapshot != null)
-                          ? (documentSnapshot["fullname"])
-                          : "",
+                      documentSnapshot!["fullname"],
                       style: GoogleFonts.openSans(
                           color: Colors.black,
                           fontSize: 20,
                           fontWeight: FontWeight.w600),
                       maxLines: 1,
                     ),
+                    subtitle: Padding(
+                      padding: EdgeInsets.only(top: 6),
+                      child: Text(
+                        documentSnapshot.id,
+                        style: GoogleFonts.openSans(
+                          color: Colors.black,
+                          fontSize: 17,
+                        ),
+                        maxLines: 1,
+                      ),
+                    ),
                     trailing: IconButton(
                       onPressed: () {},
                       icon: Icon(Icons.arrow_forward),
                       iconSize: 24.0,
                     ),
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StudentProfileScreen(
+                            pId: 0,
+                            gender: documentSnapshot["gender"],
+                            enrollNo: documentSnapshot.id,
+                            sClass: documentSnapshot["class"],
+                            clgName: documentSnapshot["collegename"],
+                            mono: documentSnapshot["mobileno"],
+                            fullName: documentSnapshot["fullname"],
+                            emailId: documentSnapshot["emailid"],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -78,8 +108,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
               ),
             );
           }
-          return Container(
-              height: 100, child: Center(child: Text("NO DATA")));
+          return Container(height: 100, child: Center(child: Text("NO DATA")));
         },
       ),
     );

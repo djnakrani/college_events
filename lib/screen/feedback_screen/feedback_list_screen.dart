@@ -2,24 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'create_notifications_screen.dart';
-
-class NotificationsListScreen extends StatefulWidget {
-  final int uId;
-
-  NotificationsListScreen(this.uId);
+class FeedbackListScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _NotificationsListScreenState();
+    return _FeedbackListScreenState();
   }
 }
 
-class _NotificationsListScreenState extends State<NotificationsListScreen> {
-  final objNotificationsDetails =
-      FirebaseFirestore.instance.collection("notifications_details");
+class _FeedbackListScreenState extends State<FeedbackListScreen> {
+  final objFeedbackDetails =
+      FirebaseFirestore.instance.collection("feedback_details");
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +24,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Notifications",
+          "Feedbacks",
           style: GoogleFonts.openSans(
             color: Colors.black,
             fontSize: 25,
@@ -39,8 +33,8 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: objNotificationsDetails
-            .orderBy("datetime", descending: true)
+        stream: objFeedbackDetails
+            .orderBy("date", descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -80,35 +74,38 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                       child: ListTile(
                         title: Text(
-                          (documentSnapshot!["notificationtitle"]),
+                          '${documentSnapshot!["email"]}',
                           style: GoogleFonts.openSans(
                               color: Colors.black,
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                           maxLines: 2,
                         ),
-                        subtitle: ReadMoreText(
-                          (documentSnapshot["notificationdescription"]),
-                          style: GoogleFonts.openSans(
-                            color: Colors.black,
-                            fontSize: 16,
+                        subtitle: Padding(
+                          padding: EdgeInsets.only(top: 6),
+                          child: ReadMoreText(
+                            (documentSnapshot["description"]),
+                            style: GoogleFonts.openSans(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                            trimLines: 2,
+                            colorClickableText: Colors.black,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: 'Show more',
+                            trimExpandedText: 'Show less',
+                            lessStyle: GoogleFonts.openSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                            moreStyle: GoogleFonts.openSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
                           ),
-                          trimLines: 2,
-                          colorClickableText: Colors.black,
-                          trimMode: TrimMode.Line,
-                          trimCollapsedText: 'Show more',
-                          trimExpandedText: 'Show less',
-                          lessStyle: GoogleFonts.openSans(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                          moreStyle: GoogleFonts.openSans(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
                         ),
                         trailing: Text(
-                          dateTimeText(documentSnapshot['datetime']),
+                          dateTimeText(documentSnapshot['date']),
                           style: GoogleFonts.openSans(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,
@@ -124,18 +121,6 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
           return Container(height: 100, child: Center(child: Text("NO DATA")));
         },
       ),
-      floatingActionButton: widget.uId == 0
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CreateNotificationsScreen()));
-              },
-              child: const Icon(Icons.add),
-              backgroundColor: Theme.of(context).primaryColor,
-            )
-          : null,
     );
   }
 

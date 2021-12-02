@@ -118,7 +118,7 @@ class _LoginAsScreenState extends State<LoginAsScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    StudentRegisterScreen(
+                                                    JudgeLoginPageScreen(
                                                   uId: 1,
                                                 ),
                                               ),

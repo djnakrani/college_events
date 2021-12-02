@@ -8,6 +8,7 @@ class ContentScrollVertical extends StatelessWidget {
   final String mainTitle;
   final double imageHeight;
   final double imageWidth;
+  final String stdId;
   final int uId;
 
   ContentScrollVertical({
@@ -15,6 +16,7 @@ class ContentScrollVertical extends StatelessWidget {
     required this.mainTitle,
     required this.imageHeight,
     required this.imageWidth,
+    required this.stdId,
   });
 
   final objEventDetails =
@@ -43,6 +45,7 @@ class ContentScrollVertical extends StatelessWidget {
                     builder: (context) => EventsScreen(
                       mainTitle: this.mainTitle,
                       uId: uId,
+                      userDocId: stdId,
                     ),
                   ),
                 ),
@@ -117,6 +120,7 @@ class ContentScrollVertical extends StatelessWidget {
                                   maxparticipate:
                                       documentSnapshot["maxparticipate"],
                                   eventId: documentSnapshot.id,
+                                  judgeId: documentSnapshot["judgeid"],
                                 ),
                               ),
                             );
@@ -132,9 +136,7 @@ class ContentScrollVertical extends StatelessWidget {
                               Positioned(
                                 child: Container(
                                   child: Text(
-                                    uId == 1
-                                        ? documentSnapshot["eventtitle"]
-                                        : documentSnapshot["whomfor"] == "Male"
+                                     documentSnapshot["whomfor"] == "Male"
                                             ? '${documentSnapshot["eventtitle"]} - Male'
                                             : documentSnapshot["whomfor"] ==
                                                     "Female"

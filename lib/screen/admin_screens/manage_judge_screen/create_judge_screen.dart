@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class CreateJudgeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -66,9 +65,8 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                       labelText: "Enter Mobile Number",
                       border: new OutlineInputBorder(),
                     ),
-                    validator: (val) => val!.isEmpty
-                        ? "Mobile Number is Required"
-                        : null,
+                    validator: (val) =>
+                        val!.isEmpty ? "Mobile Number is Required" : null,
                     onChanged: (value) {
                       _mobileNumber = value.toString();
                     },
@@ -88,6 +86,7 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                 ),
                 Card(
                   margin: EdgeInsets.only(top: 10.0),
+                  color: Theme.of(context).backgroundColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(color: Colors.black45, width: 0.8),
@@ -103,7 +102,7 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                               value: _selectedGender,
                               underline: Container(
                                 height: 2,
-                                color: Colors.white,
+                                color: Theme.of(context).backgroundColor,
                               ),
                               style: GoogleFonts.openSans(color: Colors.black),
                               onChanged: (String? newValue) {
@@ -161,7 +160,6 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        _pwd = "123";
                         objJudgeDetails
                             .add({
                               'fullname': _fullName,
@@ -169,7 +167,6 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                               'emailid': _emailId,
                               'gender': _selectedGender,
                               'address': _address,
-                              'password': _pwd,
                             })
                             .then((value) => Navigator.pop(context))
                             .catchError((error) =>

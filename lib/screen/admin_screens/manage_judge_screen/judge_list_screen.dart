@@ -76,7 +76,7 @@ class _JudgeListScreenState extends State<JudgeListScreen> {
                         borderRadius: BorderRadius.circular(10.0),
                         child: ListTile(
                           title: Text(
-                            "Assign Judge",
+                            "Assigned Judge",
                             style: GoogleFonts.openSans(
                                 color: Colors.black,
                                 fontSize: 18,

@@ -28,8 +28,12 @@ class _CreateNotificationsScreenState extends State<CreateNotificationsScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Create Event",
-          style: GoogleFonts.openSans(color: Colors.black, fontSize: 24),
+          "Create Notifications",
+          style: GoogleFonts.openSans(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(

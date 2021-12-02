@@ -40,7 +40,7 @@ class _JudgeProfileScreenState extends State<JudgeProfileScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Judge Details",
+          widget.uId == 2 ? "Profile" :"Judge Details",
           style: GoogleFonts.openSans(
               color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
         ),

@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/participate_screen/participate_name_screen.dart';
-import 'package:college_events/screen/team_screen/team_name_screen.dart';
+import 'package:college_events/screen/participate_screen/participate_score_screen.dart';
 import 'package:college_events/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Check Who apply is Male or Female
 
 class DetailEventScreen extends StatefulWidget {
   final int uId;
@@ -21,12 +23,14 @@ class DetailEventScreen extends StatefulWidget {
   final String description;
   final String whomFor;
   final String mainTitle;
+  final String judgeId;
   final num maxparticipate;
 
   DetailEventScreen(
       {required this.uId,
       required this.imgUrl,
       required this.title,
+      required this.judgeId,
       required this.startDate,
       required this.endDate,
       required this.lastDate,
@@ -268,7 +272,8 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
               ),
             ],
           ),
-          (widget.mainTitle == "Today Events" && widget.uId == 1)
+          (widget.mainTitle == "Today Events" && widget.uId == 1 ||
+                  widget.mainTitle == "Admin")
               ? SizedBox()
               : Container(
                   padding: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
@@ -300,6 +305,8 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
       return "View Participate";
     } else if (widget.mainTitle == "Past Events") {
       return "View Result";
+    } else if (widget.mainTitle == "Assign Events") {
+      return "View Participate";
     } else {
       return "";
     }
@@ -308,8 +315,17 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
   clickMaterialButton(BuildContext context) {
     if (widget.mainTitle == "Today Events" ||
         widget.mainTitle == "Upcoming Events" && widget.uId == 0) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ParticipateNameScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ParticipateNameScreen(
+                    eventId: widget.eventId,
+                    maxParticipate: widget.maxparticipate,
+                    sDate: widget.startDate.toDate(),
+                    eDate: widget.endDate.toDate(),
+                    uId: widget.uId,
+                    eventName: widget.title,
+                  )));
     } else if (widget.mainTitle == "Upcoming Events" && widget.uId == 1) {
       objParticipateDetails
           .where('studentid', isEqualTo: enrollNo)
@@ -317,27 +333,88 @@ class _DetailEventScreenState extends State<DetailEventScreen> {
           .get()
           .then((value) {
         if (value.docs.first.exists) {
-          dialog_box(context,"You Already Apply","You can check it in your events.");
-        } else {
-          print("value nathi");
-        }
+          showDialog(
+            context: context,
+            builder: (context) {
+              return DialogBox(
+                title: 'You Already Apply',
+                subtitle: 'You can check it in your events.',
+                showTextBox: false,
+                showButton: true,
+                askLaterText: 'Ok',
+                submitText: '',
+                onSubmitCallback: () {},
+                onAskLaterCallback: () {},
+              );
+            },
+          );
+        } else {}
       }).catchError((e) {
         objParticipateDetails
             .add({
               'studentid': enrollNo,
               'eventid': widget.eventId,
+              'isscore': false,
               'date': Timestamp.now(),
             })
-            .then((value) => dialog_box(context,"Successfully Applied","You can check it in your events"))
-            .catchError((error) => print("Failed to add Notification: $error"));
+            .then(
+              (value) => showDialog(
+                context: context,
+                builder: (context) {
+                  return DialogBox(
+                    title: 'Applied Successfully',
+                    subtitle: 'You can check it in your events.',
+                    showTextBox: false,
+                    showButton: true,
+                    askLaterText: 'Ok',
+                    submitText: '',
+                    onSubmitCallback: () {},
+                    onAskLaterCallback: () {},
+                  );
+                },
+              ),
+            )
+            .catchError((error) => print("Failed to add Participate: $error"));
       });
     } else if (widget.mainTitle == "Today Events" ||
         widget.mainTitle == "Upcoming Events" && widget.uId == 2) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ParticipateNameScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ParticipateNameScreen(
+                    eventId: widget.eventId,
+                    maxParticipate: widget.maxparticipate,
+                    sDate: widget.startDate.toDate(),
+                    eDate: widget.endDate.toDate(),
+                    uId: widget.uId,
+                    eventName: widget.title,
+                  )));
     } else if (widget.mainTitle == "Past Events") {
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => TeamNameScreen()));
+      if (widget.maxparticipate == 1) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ParticipateScoreScreen(
+                      eventId: widget.eventId,
+                      maxParticipate: widget.maxparticipate,
+                      sDate: widget.startDate.toDate(),
+                      eDate: widget.endDate.toDate(),
+                      uId: widget.uId,
+                      eventName: widget.title,
+                    )));
+      }
+    } else if (widget.mainTitle == "Assign Events") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ParticipateNameScreen(
+                    eventId: widget.eventId,
+                    maxParticipate: widget.maxparticipate,
+                    sDate: widget.startDate.toDate(),
+                    eDate: widget.endDate.toDate(),
+                    uId: widget.uId,
+                    eventName: widget.title,
+                  )));
     } else {
       return "";
     }

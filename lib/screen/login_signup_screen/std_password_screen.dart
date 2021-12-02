@@ -68,7 +68,7 @@ class _StudentPasswordScreenState extends State<StudentPasswordScreen> {
                       Container(
                         margin: EdgeInsets.only(bottom: 20),
                         child: Text(
-                          "will send one time password to verify your Email ID",
+                          "will send link to verify your Email ID and set a password",
                           style: GoogleFonts.openSans(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,

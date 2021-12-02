@@ -12,30 +12,26 @@ class CarouselSliderWidget extends StatelessWidget {
     "img3.png",
   ];
   final String mainTitle;
-  int uId;
+  final int uId;
+  final List<dynamic> currentNameList;
 
   CarouselSliderWidget({
     required this.uId,
     required this.mainTitle,
+    required this.currentNameList,
   });
 
   var objEventDetails = FirebaseFirestore.instance.collection("event_details");
 
-  // Stream getCurrentEvent() async* {
-  //   objEventDetails
-  //       .where("enddate", isGreaterThan: new DateTime.now())
-  //       .snapshots();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: objEventDetails
-          .where("startdate", isEqualTo: new DateTime.now())
-          .snapshots(),
+    print("Event title $currentNameList");
+    return FutureBuilder<QuerySnapshot>(
+      future:
+          objEventDetails.where("eventtitle", whereIn: currentNameList).get(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return Text('Something went wrong ${snapshot.error}');
         } else if (snapshot.hasData && snapshot.data?.docs.length != 0) {
           return CarouselSlider.builder(
             itemCount: snapshot.data?.docs.length,
@@ -70,7 +66,11 @@ class CarouselSliderWidget extends StatelessWidget {
                       Positioned(
                         child: Container(
                           child: Text(
-                            documentSnapshot["eventtitle"],
+                            documentSnapshot["whomfor"] == "Male"
+                                ? '${documentSnapshot["eventtitle"]} - Male'
+                                : documentSnapshot["whomfor"] == "Female"
+                                    ? '${documentSnapshot["eventtitle"]} - Female'
+                                    : (documentSnapshot["eventtitle"]),
                             style: GoogleFonts.openSans(
                                 color: Colors.black,
                                 fontSize: 20,
@@ -104,6 +104,7 @@ class CarouselSliderWidget extends StatelessWidget {
                           mainTitle: mainTitle,
                           description: documentSnapshot["description"],
                           maxparticipate: documentSnapshot["maxparticipate"],
+                          judgeId: documentSnapshot["judgeid"],
                         ),
                       ),
                     );
