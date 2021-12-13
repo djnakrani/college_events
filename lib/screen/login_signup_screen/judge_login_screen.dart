@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/home_screen/home_screen.dart';
 import 'package:college_events/screen/login_signup_screen/judge_signup_screen.dart';
 import 'package:college_events/screen/login_signup_screen/forgot_screen.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'loginas_screen.dart';
 
 class JudgeLoginPageScreen extends StatefulWidget {
@@ -23,6 +25,15 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
   final auth = FirebaseAuth.instance;
   final _formSigninKey = GlobalKey<FormState>();
   late SnackBar snackBar;
+  final objStudentDetails =
+      FirebaseFirestore.instance.collection("student_details");
+  final objJudgeDetails =
+      FirebaseFirestore.instance.collection("judge_details");
+  var objEventDetails = FirebaseFirestore.instance.collection("event_details");
+  String userDocId = "";
+  String email = "";
+  String fName = "";
+  String gender = "";
 
   @override
   Widget build(BuildContext context) {
@@ -109,9 +120,7 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter password';
                                 }
-                                // else if (value.length <= 8) {
-                                //   return 'Minimum 8 Character';
-                                // }
+
                                 return null;
                               },
                               onChanged: (value) {
@@ -150,6 +159,8 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                                         .signInWithEmailAndPassword(
                                             email: _email, password: _password)
                                         .then((value) {
+                                      email = _email;
+                                      setPreferences();
                                       Navigator.of(context)
                                           .pushReplacement(MaterialPageRoute(
                                               builder: (context) => HomeScreen(
@@ -185,7 +196,9 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
                                                             uId: widget.uId)));
                                       },
                                       child: Text(
-                                        widget.uId == 1?"Don't have credentials?? REGISTER":'New User?  REGISTER',
+                                        widget.uId == 1
+                                            ? "Don't have credentials?? REGISTER"
+                                            : 'New User?  REGISTER',
                                         style: GoogleFonts.openSans(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -236,6 +249,75 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
     );
   }
 
+  Future setPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("emailId", email);
+    if (widget.uId == 0) {
+      await prefs.setBool("isAdminLogin", true);
+      await prefs.setString("fullname", "Admin");
+      await prefs.setString("email", email);
+    } else if (widget.uId == 1) {
+      await prefs.setBool("isStdLogin", true);
+      final id = objStudentDetails
+          .where('emailid', isEqualTo: email)
+          .get()
+          .then((value) => value.docs.first.id);
+      await getStdUserId(id);
+    } else if (widget.uId == 2) {
+      await prefs.setBool("isJudgeLogin", true);
+      final id = objJudgeDetails
+          .where('emailid', isEqualTo: email)
+          .get()
+          .then((value) => value.docs.first.id);
+      await getJudgeUserId(id);
+    } else {}
+  }
+
+  Future<void> getStdUserId(futureString) async {
+    final sId = await futureString;
+    setState(() => userDocId = sId);
+    final stdDetails = objStudentDetails.doc(userDocId).get();
+    stdDetails.then(
+      (value) async {
+        if (value.exists) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString("stdId", userDocId);
+          await prefs.setString("class", value['class']);
+          await prefs.setString("email", value['emailid']);
+          await prefs.setString("fullname", value['fullname']);
+          await prefs.setString("gender", value['gender']);
+          await prefs.setString("mobileno", value['mobileno']);
+          await prefs.setString("collegename", value['collegename']);
+          print("Set Data");
+        } else {
+          print("not set");
+        }
+      },
+    );
+  }
+
+  Future<void> getJudgeUserId(futureString) async {
+    final jId = await futureString;
+    setState(() => userDocId = jId);
+    final judgeDetails = objJudgeDetails.doc(userDocId).get();
+    judgeDetails.then(
+      (value) async {
+        if (value.exists) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          print("Set Data");
+          await prefs.setString("judgeId", userDocId);
+          await prefs.setString("fullname", value['fullname']);
+          await prefs.setString("email", value['emailid']);
+          await prefs.setString("gender", value['gender']);
+          await prefs.setString("address", value['address']);
+          await prefs.setString("mobileno", value['mobileno']);
+        } else {
+          print("not set");
+        }
+      },
+    );
+  }
+
   void ShowError(onError) {
     if (onError.toString().contains('invalid-email')) {
       snackBar = SnackBar(content: Text('Email Address Invalid'));
@@ -243,24 +325,6 @@ class _JudgeLoginPageScreenState extends State<JudgeLoginPageScreen> {
       snackBar = SnackBar(content: Text('User Not Register'));
     } else {
       snackBar = SnackBar(content: Text("Something Went Wrong..."));
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return DialogBox(
-      //       title: "Please enter valid Email or Password",
-      //       subtitle: "",
-      //       showTextBox: false,
-      //       showButton: true,
-      //       askLaterText: 'Ok',
-      //       submitText: 'Submit',
-      //       hintText: "Enter Score",
-      //       onSubmitCallback: (onSubmit) {
-      //       },
-      //       onAskLaterCallback: (feedback) {
-      //       },
-      //     );
-      //   },
-      // );
     }
   }
 }

@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String userDocId = "";
   String email = "";
   String fName = "";
+  String gender = "";
   List<dynamic> tmpList = [];
   List<dynamic> currentList = [];
   List<dynamic> currentNameList = [""];
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     setPreferences();
-    getName();
+    // getName();
     super.initState();
   }
 
@@ -123,34 +124,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future setPreferences() async {
-    await Future.delayed(Duration(seconds: 1));
-    getPastEventsList();
+    await Future.delayed(Duration(seconds: 2));
     final User? user = widget.auth.currentUser;
-    // final userId = user!.uid;
     String? userEmail = user!.email;
     email = userEmail!;
-    // print("User Id is : $userEmail");
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // print("set Preference");
     await prefs.setString("emailId", userEmail);
     if (widget.uId == 0) {
       await prefs.setBool("isAdminLogin", true);
       await prefs.setString("fullname", "Admin");
+      await getName();
     } else if (widget.uId == 1) {
       await prefs.setBool("isStdLogin", true);
       final id = objStudentDetails
           .where('emailid', isEqualTo: userEmail)
           .get()
           .then((value) => value.docs.first.id);
-      getStdUserId(id);
+      await getStdUserId(id);
+      await getName();
     } else if (widget.uId == 2) {
       await prefs.setBool("isJudgeLogin", true);
       final id = objJudgeDetails
           .where('emailid', isEqualTo: userEmail)
           .get()
           .then((value) => value.docs.first.id);
-      getJudgeUserId(id);
+      await getJudgeUserId(id);
+      await getName();
     } else {}
+    await getPastEventsList();
   }
 
   Future<void> getStdUserId(futureString) async {
@@ -197,7 +198,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> getName() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    fName = prefs.getString("fullname")!;
+    fName = await prefs.getString("fullname")!;
+    gender = await prefs.getString("gender")!;
   }
 
   Future<List<String>> getPastEvents() async {
@@ -212,14 +214,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Future getPastEventsList() async {
     final Future<List<dynamic>> futureList = getPastEvents();
     var list = await futureList;
+    print("Past is $list");
     tmpList = list;
-    getUpcomingEventsList();
+    await getUpcomingEventsList();
   }
 
   Future<List<String>> getUpcomingEvents1() async {
     final id = objEventDetails
         .where('enddate',
-            isGreaterThanOrEqualTo: new DateTime.now().add(Duration(hours: 12)))
+            isGreaterThanOrEqualTo: new DateTime.now().add(Duration(hours: 1)))
         .get()
         .then((value) => value.docs.map((e) => e.id).toList());
     return await id;
@@ -228,8 +231,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future getUpcomingEventsList() async {
     final Future<List<dynamic>> futureList = getUpcomingEvents1();
     final currentList = await futureList;
+    print("List is $currentList");
     currentList.removeWhere((element) => !tmpList.contains(element));
-    // print("currentList = $currentList");
+    print("currentList = $currentList");
     for (var e in currentList) {
       objEventDetails.doc(e).get().then((value) {
         if (value.exists) {

@@ -3,6 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateJudgeScreen extends StatefulWidget {
+  final String fName;
+  final String mNumber;
+  final String emailId;
+  final String add;
+  final String mTitle;
+  final String gender;
+  final String judgeId;
+
+  CreateJudgeScreen(
+      {this.fName = "",
+      this.mNumber = "",
+      this.emailId = "",
+      this.add = "",
+      this.mTitle = "",
+      this.gender = "",
+      this.judgeId = ""});
+
   @override
   State<StatefulWidget> createState() {
     return _CreateJudgeScreenState();
@@ -10,13 +27,28 @@ class CreateJudgeScreen extends StatefulWidget {
 }
 
 class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
-  late String _fullName, _mobileNumber, _emailId, _address, _pwd;
+  final TextEditingController _fullName = new TextEditingController();
+  final TextEditingController _mobileNumber = new TextEditingController();
+  final TextEditingController _emailId = new TextEditingController();
+  final TextEditingController _address = new TextEditingController();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   CollectionReference objJudgeDetails =
       FirebaseFirestore.instance.collection('judge_details');
   final List<String> gender = ["Male", "Female"];
   String _selectedGender = "Male";
+
+  @override
+  void initState() {
+    if (widget.mTitle == "Edit") {
+      _fullName.text = widget.fName;
+      _mobileNumber.text = widget.mNumber;
+      _emailId.text = widget.emailId;
+      _address.text = widget.add;
+      _selectedGender = widget.gender;
+    } else {}
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +59,7 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Add Judge",
+          widget.mTitle == "Edit" ? "Edit Judge Details" : "Add Judge",
           style: GoogleFonts.openSans(
             color: Colors.black,
             fontSize: 25,
@@ -45,14 +77,11 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                 new Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: new TextFormField(
-                    // controller: _nameController,
+                    controller: _fullName,
                     decoration: new InputDecoration(
                       labelText: "Enter Full Name",
                       border: new OutlineInputBorder(),
                     ),
-                    onChanged: (value) {
-                      _fullName = value.toString();
-                    },
                     validator: (val) =>
                         val!.isEmpty ? "Name is Required" : null,
                   ),
@@ -60,27 +89,27 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: new TextFormField(
-                    // controller: _descriptionController,
-                    decoration: new InputDecoration(
-                      labelText: "Enter Mobile Number",
-                      border: new OutlineInputBorder(),
-                    ),
-                    validator: (val) =>
-                        val!.isEmpty ? "Mobile Number is Required" : null,
-                    onChanged: (value) {
-                      _mobileNumber = value.toString();
-                    },
-                  ),
+                      controller: _mobileNumber,
+                      keyboardType: TextInputType.number,
+                      decoration: new InputDecoration(
+                        labelText: "Enter Mobile Number",
+                        border: new OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter Your Mobile Number';
+                        } else if (value.length != 10) {
+                          return "Invalid Mobile Number";
+                        }
+                        return null;
+                      }),
                 ),
                 new TextFormField(
-                  // controller: _emailIdController,
+                  controller: _emailId,
                   decoration: new InputDecoration(
                     labelText: "Enter Email ID",
                     border: new OutlineInputBorder(),
                   ),
-                  onChanged: (value) {
-                    _emailId = value.toString();
-                  },
                   validator: (val) =>
                       val!.isEmpty ? "Email ID is Required" : null,
                 ),
@@ -130,15 +159,11 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                 new Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 20.0),
                   child: new TextFormField(
-                    // controller: _maxController,
-                    keyboardType: TextInputType.number,
+                    controller: _address,
                     decoration: new InputDecoration(
                       labelText: "Enter Address",
                       border: new OutlineInputBorder(),
                     ),
-                    onChanged: (value) {
-                      _address = value.toString();
-                    },
                     validator: (val) =>
                         val!.isEmpty ? "Address is Required" : null,
                   ),
@@ -150,7 +175,7 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Text(
-                        "Add",
+                        widget.mTitle == "Edit" ? "Update" : "Add",
                         style: GoogleFonts.openSans(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -160,17 +185,33 @@ class _CreateJudgeScreenState extends State<CreateJudgeScreen> {
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        objJudgeDetails
-                            .add({
-                              'fullname': _fullName,
-                              'mobileno': _mobileNumber,
-                              'emailid': _emailId,
-                              'gender': _selectedGender,
-                              'address': _address,
-                            })
-                            .then((value) => Navigator.pop(context))
-                            .catchError((error) =>
-                                print("Failed to add Notification: $error"));
+                        if (widget.mTitle == "Edit") {
+                          NavigatorState nav;
+                          objJudgeDetails.doc('${widget.judgeId}').set({
+                            'fullname': _fullName.text,
+                            'mobileno': _mobileNumber.text,
+                            'emailid': _emailId.text,
+                            'gender': _selectedGender,
+                            'address': _address.text,
+                          }, SetOptions(merge: false)).then((value) {
+                            nav = Navigator.of(context);
+                            nav.pop();
+                            nav.pop();
+                          }).catchError(
+                              (error) => print("Failed to add user: $error"));
+                        } else {
+                          objJudgeDetails
+                              .add({
+                                'fullname': _fullName.text,
+                                'mobileno': _mobileNumber.text,
+                                'emailid': _emailId.text,
+                                'gender': _selectedGender,
+                                'address': _address.text,
+                              })
+                              .then((value) => Navigator.pop(context))
+                              .catchError((error) =>
+                                  print("Failed to add Notification: $error"));
+                        }
                       }
                     },
                   ),
