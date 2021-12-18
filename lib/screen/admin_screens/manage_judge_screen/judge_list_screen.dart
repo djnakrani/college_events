@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/admin_screens/manage_judge_screen/assign_judge_screen.dart';
 import 'package:college_events/screen/admin_screens/manage_judge_screen/create_judge_screen.dart';
 import 'package:college_events/screen/profile_screen/judge_profile_screen.dart';
+import 'package:college_events/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -46,52 +47,52 @@ class _JudgeListScreenState extends State<JudgeListScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AssignJudgeScreen()));
-                    },
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 22.0, vertical: 10),
-
-                      // height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black54,
-                            offset: Offset(0.0, 2),
-                            blurRadius: 6.0,
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: ListTile(
-                          title: Text(
-                            "Assigned Judge",
-                            style: GoogleFonts.openSans(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                          ),
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.assignment_ind_rounded),
-                            iconSize: 24.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => AssignJudgeScreen()));
+                  //   },
+                  //   child: Container(
+                  //     margin:
+                  //         EdgeInsets.symmetric(horizontal: 22.0, vertical: 10),
+                  //
+                  //     // height: 60,
+                  //     width: MediaQuery.of(context).size.width,
+                  //     padding: EdgeInsets.symmetric(vertical: 8),
+                  //     alignment: Alignment.centerLeft,
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.white,
+                  //       borderRadius: BorderRadius.circular(5.0),
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //           color: Colors.black54,
+                  //           offset: Offset(0.0, 2),
+                  //           blurRadius: 6.0,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     child: ClipRRect(
+                  //       borderRadius: BorderRadius.circular(10.0),
+                  //       child: ListTile(
+                  //         title: Text(
+                  //           "Assigned Judge",
+                  //           style: GoogleFonts.openSans(
+                  //               color: Colors.black,
+                  //               fontSize: 18,
+                  //               fontWeight: FontWeight.bold),
+                  //           maxLines: 1,
+                  //         ),
+                  //         trailing: IconButton(
+                  //           onPressed: () {},
+                  //           icon: Icon(Icons.assignment_ind_rounded),
+                  //           iconSize: 24.0,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -128,6 +129,7 @@ class _JudgeListScreenState extends State<JudgeListScreen> {
                                 fullName: documentSnapshot["fullname"],
                                 address: documentSnapshot["address"],
                                 mobileNo: documentSnapshot["mobileno"],
+                                jId: documentSnapshot.id,
                               ),
                             ),
                           );
@@ -164,8 +166,27 @@ class _JudgeListScreenState extends State<JudgeListScreen> {
                                 maxLines: 1,
                               ),
                               trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.arrow_forward),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DialogBox(
+                                        title: 'Are you sure??',
+                                        subtitle: "If you delete this Judge, He can not login into our system.",
+                                        showTextBox: false,
+                                        showButton: true,
+                                        showOk: true,
+                                        askLaterText: 'Cancel',
+                                        submitText: 'Ok',
+                                        onSubmitCallback: (onSubmit) {
+
+                                        },
+                                        onAskLaterCallback: (onSubmit) {},
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(Icons.delete),
                                 iconSize: 24.0,
                               ),
                             ),

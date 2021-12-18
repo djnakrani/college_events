@@ -79,7 +79,7 @@ class navigationDrawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => StudentProfileScreen(
-                                pId: 0,
+                                pId: 1,
                                 gender: gender,
                                 enrollNo: userDocId,
                                 sClass: sClass,
@@ -87,6 +87,7 @@ class navigationDrawer extends StatelessWidget {
                                 mono: mono,
                                 fullName: fName,
                                 emailId: email,
+                                dob: Timestamp.now(),
                               ),
                             ))
                         : Navigator.push(
@@ -99,6 +100,7 @@ class navigationDrawer extends StatelessWidget {
                                 mobileNo: mono,
                                 address: address,
                                 uId: uId,
+                                jId: userDocId,
                               ),
                             ));
               },
@@ -195,35 +197,36 @@ class navigationDrawer extends StatelessWidget {
                     : Navigator.pop(context);
                 uId != 0
                     ? showDialog(
-                  context: context,
-                  builder: (context) {
-                    return QuickFeedback(
-                      title: 'Feedback',
-                      defaultRating: 4,
-                      showTextBox: true,
-                      textBoxHint: 'Share your Thoughts',
-                      submitText: 'SUBMIT',
-                      onSubmitCallback: (feedback) {
-                        print('${feedback['rating']}');
-                        objFeedbackDetails
-                            .add({
-                              'email': email,
-                              'description': feedback['feedback'] ?? "",
-                              'star': feedback['rating'],
-                              'date': Timestamp.now(),
-                            })
-                            .then((value) => Navigator.pop(context))
-                            .catchError(
-                                (error) => print("Failed to add user: $error"));
-                        Navigator.of(context).pop();
-                      },
-                      askLaterText: 'ASK LATER',
-                      onAskLaterCallback: () {
-                        print('Do something on ask later click');
-                      },
-                    );
-                  },
-                ):null;
+                        context: context,
+                        builder: (context) {
+                          return QuickFeedback(
+                            title: 'Feedback',
+                            defaultRating: 4,
+                            showTextBox: true,
+                            textBoxHint: 'Share your Thoughts',
+                            submitText: 'SUBMIT',
+                            onSubmitCallback: (feedback) {
+                              print('${feedback['rating']}');
+                              objFeedbackDetails
+                                  .add({
+                                    'email': email,
+                                    'description': feedback['feedback'] ?? "",
+                                    'star': feedback['rating'],
+                                    'date': Timestamp.now(),
+                                  })
+                                  .then((value) => Navigator.pop(context))
+                                  .catchError((error) =>
+                                      print("Failed to add user: $error"));
+                              Navigator.of(context).pop();
+                            },
+                            askLaterText: 'ASK LATER',
+                            onAskLaterCallback: () {
+                              print('Do something on ask later click');
+                            },
+                          );
+                        },
+                      )
+                    : null;
               },
             ),
             createDrawerBodyItem(
@@ -277,7 +280,7 @@ class navigationDrawer extends StatelessWidget {
               margin: EdgeInsets.only(top: 15),
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "$fName",
+                uId == 0 ? "Admin" : "$fName",
                 style: GoogleFonts.openSans(
                     color: Colors.black,
                     fontSize: 20.0,

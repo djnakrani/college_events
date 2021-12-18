@@ -1,3 +1,4 @@
+import 'package:college_events/screen/admin_screens/manage_judge_screen/create_judge_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 class JudgeProfileScreen extends StatefulWidget {
   final int uId;
   final String fullName;
+  final String jId;
   final String mobileNo;
   final String emailID;
   final String address;
@@ -16,7 +18,7 @@ class JudgeProfileScreen extends StatefulWidget {
       required this.mobileNo,
       required this.emailID,
       required this.address,
-      required this.gender});
+      required this.gender, required this.jId});
 
   @override
   State<StatefulWidget> createState() {
@@ -95,7 +97,20 @@ class _JudgeProfileScreenState extends State<JudgeProfileScreen> {
                         ),
                       ),
                       color: Theme.of(context).primaryColor,
-                      onPressed: () {},
+                      onPressed: () {Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateJudgeScreen(
+                            mTitle: 'Edit',
+                            emailId: widget.emailID,
+                            gender: widget.gender,
+                            fName: widget.fullName,
+                            mNumber: widget.mobileNo,
+                            add: widget.address,
+                            judgeId: widget.jId,
+                          ),
+                        ),
+                      );},
                     ),
                     width: MediaQuery.of(context).size.width * 0.78,
                     margin: EdgeInsets.all(15),

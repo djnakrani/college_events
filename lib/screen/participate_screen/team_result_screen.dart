@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ParticipateScoreScreen extends StatefulWidget {
+class TeamResultScreen extends StatefulWidget {
   final String eventId;
   final String eventName;
   final int uId;
@@ -10,7 +10,7 @@ class ParticipateScoreScreen extends StatefulWidget {
   final DateTime eDate;
   final num maxParticipate;
 
-  ParticipateScoreScreen(
+  TeamResultScreen(
       {required this.eventId,
       required this.maxParticipate,
       required this.sDate,
@@ -23,15 +23,16 @@ class ParticipateScoreScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _ParticipateScoreScreenState();
+    return _TeamResultScreenState();
   }
 }
 
-class _ParticipateScoreScreenState extends State<ParticipateScoreScreen> {
+class _TeamResultScreenState extends State<TeamResultScreen> {
   final objStudentDetails =
       FirebaseFirestore.instance.collection("student_details");
   final objParticipateDetails =
       FirebaseFirestore.instance.collection("participate_details");
+  final objTeamDetails = FirebaseFirestore.instance.collection("team_details");
 
   @override
   void initState() {
@@ -56,12 +57,11 @@ class _ParticipateScoreScreenState extends State<ParticipateScoreScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            widget.maxParticipate == 1 &&
+            widget.maxParticipate != 1 &&
                     (widget.sDate.isAtSameMomentAs(widget.dateNow) ||
                         widget.sDate.isBefore(widget.dateNow))
                 ? Align(
@@ -69,7 +69,7 @@ class _ParticipateScoreScreenState extends State<ParticipateScoreScreen> {
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                       child: Text(
-                        "Participates Score Details",
+                        "Team Result Details",
                         style: GoogleFonts.openSans(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
@@ -78,10 +78,10 @@ class _ParticipateScoreScreenState extends State<ParticipateScoreScreen> {
                     ),
                   )
                 : SizedBox(),
-            widget.maxParticipate == 1 &&
+            widget.maxParticipate != 1 &&
                     (widget.sDate.isAtSameMomentAs(widget.dateNow) ||
                         widget.sDate.isBefore(widget.dateNow))
-                ? streamBuilder(1)
+                ? streamBuilder()
                 : SizedBox(),
           ],
         ),
@@ -89,11 +89,11 @@ class _ParticipateScoreScreenState extends State<ParticipateScoreScreen> {
     );
   }
 
-  Widget streamBuilder(isScore) {
+  Widget streamBuilder() {
     return StreamBuilder<QuerySnapshot>(
-      stream: objParticipateDetails
+      stream: objTeamDetails
           .where("eventid", isEqualTo: widget.eventId)
-          .orderBy("score",descending: true)
+          .where("status", whereIn: ["Winner","1st RunnerUp","2nd RunnerUp"])
           .snapshots(),
       builder: (context, snapshot) {
         print("Snapshot : $snapshot");
@@ -110,62 +110,26 @@ class _ParticipateScoreScreenState extends State<ParticipateScoreScreen> {
             itemBuilder: (BuildContext context, int index) {
               QueryDocumentSnapshot<Object?>? documentSnapshot =
                   snapshot.data?.docs[index];
-              return FutureBuilder(
-                future: objStudentDetails
-                    .doc("${documentSnapshot!['studentid']}")
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Something went wrong');
-                  } else if (snapshot.hasData) {
-                    final docEvent = snapshot.data as DocumentSnapshot;
-                    return ListTile(
-                      title: Text(
-                        docEvent["fullname"],
-                        style: GoogleFonts.openSans(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      dense: true,
-                      trailing: isScore == 1
-                          ? Text(
-                              documentSnapshot["score"],
-                              style: GoogleFonts.openSans(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            )
-                          : Icon(Icons.keyboard_arrow_right),
-                      subtitle: Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Text(
-                          "${docEvent.id} - ${docEvent["class"]}",
-                          style: GoogleFonts.openSans(
-                              color: Colors.black, fontSize: 14),
-                        ),
-                      ),
-                      onTap: () {
-                        // print(documentSnapshot.id);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => StudentProfileScreen(
-                        //       pId: 1,
-                        //       gender: docEvent["gender"],
-                        //       enrollNo: docEvent.id,
-                        //       sClass: docEvent["class"],
-                        //       clgName: docEvent["collegename"],
-                        //       mono: docEvent["mobileno"],
-                        //       fullName: docEvent["fullname"],
-                        //       emailId: docEvent["emailid"],
-                        //     ),
-                        //   ),
-                        // );
-                      },
-                    );
-                  }
-                  return SizedBox();
+              return ListTile(
+                title: Text(
+                  documentSnapshot!["teamname"],
+                  style: GoogleFonts.openSans(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600),
+                ),
+                dense: true,
+                trailing: Icon(Icons.keyboard_arrow_right),
+                subtitle: Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    documentSnapshot["status"],
+                    style:
+                        GoogleFonts.openSans(color: Colors.black, fontSize: 14),
+                  ),
+                ),
+                onTap: () {
+
                 },
               );
             },

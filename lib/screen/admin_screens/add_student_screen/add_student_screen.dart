@@ -5,6 +5,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class AddStudentScreen extends StatefulWidget {
+  final String fName;
+  final String mNumber;
+  final String emailId;
+  final String eNumber;
+  final String sClass;
+  final String clg;
+  final String dob;
+  final String mTitle;
+  final String gender;
+
+  AddStudentScreen({
+    this.fName = "",
+    this.mNumber = "",
+    this.emailId = "",
+    this.dob = "",
+    this.mTitle = "",
+    this.gender = "",
+    this.eNumber = "",
+    this.sClass = "",
+    this.clg = "",
+  });
+
   @override
   State<StatefulWidget> createState() {
     return _AddStudentScreenState();
@@ -12,7 +34,10 @@ class AddStudentScreen extends StatefulWidget {
 }
 
 class _AddStudentScreenState extends State<AddStudentScreen> {
-  late String _fullName, _enrollNumber, _mobileNumber, _emailID;
+  final TextEditingController _fullName = new TextEditingController();
+  final TextEditingController _enrollNumber = new TextEditingController();
+  final TextEditingController _mobileNumber = new TextEditingController();
+  final TextEditingController _emailID = new TextEditingController();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final TextEditingController _dateOfBirthController =
       new TextEditingController();
@@ -27,6 +52,21 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   String _selectedClg = "GMCA, Maninagar";
 
   @override
+  void initState() {
+    if (widget.mTitle == "Edit") {
+      _fullName.text = widget.fName;
+      _enrollNumber.text = widget.eNumber;
+      _mobileNumber.text = widget.mNumber;
+      _emailID.text = widget.emailId;
+      _dateOfBirthController.text = widget.dob;
+      _selectedGender = widget.gender;
+      _selectedClass = widget.sClass;
+      _selectedClg = widget.clg;
+    } else {}
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -35,7 +75,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          "Add Student",
+          widget.mTitle == "Edit" ? "Edit Student Details" : "Add Student",
           style: GoogleFonts.openSans(
             color: Colors.black,
             fontSize: 25,
@@ -53,14 +93,11 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 new Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: new TextFormField(
-                    // controller: _nameController,
+                    controller: _fullName,
                     decoration: new InputDecoration(
                       labelText: "Event Full Name",
                       border: new OutlineInputBorder(),
                     ),
-                    onChanged: (value) {
-                      _fullName = value.toString();
-                    },
                     validator: (val) =>
                         val!.isEmpty ? "Full Name  is required" : null,
                   ),
@@ -68,16 +105,13 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: new TextFormField(
-                    // controller: _descriptionController,
+                    controller: _enrollNumber,
                     decoration: new InputDecoration(
                       labelText: "Enter Enrollment Number",
                       border: new OutlineInputBorder(),
                     ),
                     validator: (val) =>
                         val!.isEmpty ? "Enrollment Number is required" : null,
-                    onChanged: (value) {
-                      _enrollNumber = value.toString();
-                    },
                   ),
                 ),
                 Padding(
@@ -130,31 +164,30 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 new Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: new TextFormField(
-                    // controller: _maxController,
-                    keyboardType: TextInputType.number,
-                    decoration: new InputDecoration(
-                      labelText: "Enter Mobile Number",
-                      border: new OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      _mobileNumber = value.toString();
-                    },
-                    validator: (val) =>
-                        val!.isEmpty ? "Mobile Number is required" : null,
-                  ),
+                      controller: _mobileNumber,
+                      keyboardType: TextInputType.number,
+                      decoration: new InputDecoration(
+                        labelText: "Enter Mobile Number",
+                        border: new OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter Your Mobile Number';
+                        } else if (value.length != 10) {
+                          return "Invalid Mobile Number";
+                        }
+                        return null;
+                      }),
                 ),
                 new Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: new TextFormField(
-                    // controller: _maxController,
+                    controller: _emailID,
                     keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
                       labelText: "Enter Email Id",
                       border: new OutlineInputBorder(),
                     ),
-                    onChanged: (value) {
-                      _emailID = value.toString();
-                    },
                     validator: (val) =>
                         val!.isEmpty ? "Email Id is required" : null,
                   ),
@@ -186,15 +219,15 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                                 });
                               },
                               items: sClass.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(value),
-                                      ),
-                                    );
-                                  }).toList(),
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(value),
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
@@ -245,7 +278,6 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     ),
                   ),
                 ),
-
                 Container(
                   width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -253,7 +285,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Text(
-                        "Create",
+                        widget.mTitle == "Edit" ? "Update" : "Add",
                         style: GoogleFonts.openSans(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -266,20 +298,39 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                         String timeFormat = "EEE, MMM d, yyyy";
                         DateTime dob = DateFormat(timeFormat)
                             .parseStrict(_dateOfBirthController.text);
-                        objStudentDetails
-                            .add({
-                              'fullname': _fullName,
-                              // 'enrollmentno': _enrollNumber,
-                              'dateofbirth': Timestamp.fromDate(dob),
-                              'gender': _selectedGender,
-                              'mobileno': _mobileNumber,
-                              'emailid': _emailID,
-                              'class': _selectedClass,
-                              'collegename': _selectedClg,
-                            })
-                            .then((value) => Navigator.pop(context))
-                            .catchError(
-                                (error) => print("Failed to add user: $error"));
+
+                        if (widget.mTitle == "Edit") {
+                          NavigatorState nav;
+                          objStudentDetails.doc('${widget.eNumber}').set({
+                            'fullname': _fullName.text,
+                            'dateofbirth': Timestamp.fromDate(dob),
+                            'gender': _selectedGender,
+                            'mobileno': _mobileNumber.text,
+                            'emailid': _emailID.text,
+                            'class': _selectedClass,
+                            'collegename': _selectedClg,
+                          }, SetOptions(merge: false)).then((value) {
+                            nav = Navigator.of(context);
+                            nav.pop();
+                            nav.pop();
+                          }).catchError(
+                              (error) => print("Failed to add user: $error"));
+                        } else {
+                          objStudentDetails
+                              .doc('${_enrollNumber.text}')
+                              .set({
+                                'fullname': _fullName.text,
+                                'dateofbirth': Timestamp.fromDate(dob),
+                                'gender': _selectedGender,
+                                'mobileno': _mobileNumber.text,
+                                'emailid': _emailID.text,
+                                'class': _selectedClass,
+                                'collegename': _selectedClg,
+                              })
+                              .then((value) => Navigator.pop(context))
+                              .catchError((error) =>
+                                  print("Failed to add user: $error"));
+                        }
                       }
                     },
                   ),

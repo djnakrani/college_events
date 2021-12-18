@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/admin_screens/create_event_screen/create_event_screen.dart';
 import 'package:college_events/screen/event_details_screen/details_event_screen.dart';
 import 'package:college_events/screen/profile_screen/student_profile_screen.dart';
+import 'package:college_events/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -79,11 +80,28 @@ class _StudentListScreenState extends State<StudentListScreen> {
                       ),
                     ),
                     trailing: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.arrow_forward),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return DialogBox(
+                              title: 'Are you sure??',
+                              subtitle: "If you delete this Student, He can not login into our system.",
+                              showTextBox: false,
+                              showButton: true,
+                              showOk: true,
+                              askLaterText: 'Cancel',
+                              submitText: 'Ok',
+                              onSubmitCallback: (onSubmit) {},
+                              onAskLaterCallback: (onSubmit) {},
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(Icons.delete),
                       iconSize: 24.0,
                     ),
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -96,6 +114,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                             mono: documentSnapshot["mobileno"],
                             fullName: documentSnapshot["fullname"],
                             emailId: documentSnapshot["emailid"],
+                            dob: documentSnapshot["dateofbirth"],
                           ),
                         ),
                       );

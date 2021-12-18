@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_events/screen/profile_screen/student_profile_screen.dart';
+import 'package:college_events/screen/team_screen/team_name_screen.dart';
 import 'package:college_events/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ParticipateNameScreen extends StatefulWidget {
   final String eventId;
+  final String judgeId;
+  final String jId;
   final String eventName;
   final int uId;
   final DateTime sDate;
@@ -18,7 +22,9 @@ class ParticipateNameScreen extends StatefulWidget {
       required this.sDate,
       required this.eDate,
       required this.uId,
-      required this.eventName});
+      required this.eventName,
+      required this.judgeId,
+      required this.jId});
 
   late DateTime dateNow = DateTime.now();
   late DateTime dateAddOneEnd = eDate.add(Duration(days: 2));
@@ -34,6 +40,10 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
       FirebaseFirestore.instance.collection("student_details");
   final objParticipateDetails =
       FirebaseFirestore.instance.collection("participate_details");
+  final objTeamDetails = FirebaseFirestore.instance.collection("team_details");
+  String jIds = "";
+  List partiForTeam = [];
+  List<dynamic> tmpList = [];
 
   @override
   void initState() {
@@ -44,6 +54,8 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getPrefData();
+    print("JId : ${widget.jId}");
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -68,7 +80,47 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
           ),
           IconButton(
             padding: EdgeInsets.only(right: 10.0),
-            onPressed: () => print('Add'),
+            onPressed: () {
+              getSelectedIdsList();
+              print("Id = $partiForTeam");
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return DialogBox(
+                    title: "Create Team",
+                    subtitle: "",
+                    showTextBox: true,
+                    showButton: true,
+                    askLaterText: 'Cancel',
+                    showOk: true,
+                    submitText: 'Submit',
+                    hintText: "Enter Name of Team",
+                    onSubmitCallback: (onSubmit) {
+                      String tName = onSubmit["text"];
+
+                      objTeamDetails.add({
+                        "teamname": tName,
+                        "eventid": widget.eventId,
+                        "judgeid": widget.judgeId,
+                        "studentids": FieldValue.arrayUnion(partiForTeam),
+                        "status": "Pending",
+                      }).then((value) {
+                        for (var i in tmpList) {
+                          print("i is $i");
+                          objParticipateDetails.doc('$i').set({
+                            'isselect': false,
+                            "isscore": true,
+                          }, SetOptions(merge: true));
+                        }
+                        Navigator.pop(context);
+                      }).catchError((error) =>
+                          print("Failed to add Notification: $error"));
+                    },
+                    onAskLaterCallback: (feedback) {},
+                  );
+                },
+              );
+            },
             icon: Icon(Icons.add),
             iconSize: 30.0,
             color: Colors.black,
@@ -123,6 +175,21 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TeamNameScreen(
+                eventId: widget.eventId,
+                eventName: widget.eventName,
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
     );
   }
 
@@ -138,11 +205,11 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
               .where("isscore", isEqualTo: true)
               .snapshots(),
       builder: (context, snapshot) {
-        print("Snapshot : $snapshot");
+        // print("Snapshot : $snapshot");
         if (snapshot.hasError) {
           return Text('Something went wrong');
         } else if (snapshot.hasData && snapshot.data?.docs.length != 0) {
-          print("Length : ${snapshot.data?.docs.length}");
+          // print("Length : ${snapshot.data?.docs.length}");
           return ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
             scrollDirection: Axis.vertical,
@@ -178,7 +245,18 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18),
                             )
-                          : Icon(Icons.keyboard_arrow_right),
+                          : widget.maxParticipate != 1
+                              ? Checkbox(
+                                  value: documentSnapshot['isselect'],
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      objParticipateDetails
+                                          .doc('${documentSnapshot.id}')
+                                          .set({'isselect': value},
+                                              SetOptions(merge: true));
+                                    });
+                                  })
+                              : Icon(Icons.keyboard_arrow_right),
                       subtitle: Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
@@ -202,6 +280,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                                 showTextBox: true,
                                 showButton: true,
                                 askLaterText: 'Cancel',
+                                showOk: true,
                                 submitText: 'Submit',
                                 hintText: "Enter Score",
                                 onSubmitCallback: (onSubmit) {
@@ -215,7 +294,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                                           SetOptions(merge: true));
                                 },
                                 onAskLaterCallback: (feedback) {
-                                  Navigator.of(context).pop();
+                                  // Navigator.of(context).pop();
                                 },
                               );
                             },
@@ -232,6 +311,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                                 title: "Change Score",
                                 subtitle: "Name : ${docEvent['fullname']}",
                                 showTextBox: true,
+                                showOk: true,
                                 showButton: true,
                                 askLaterText: 'Cancel',
                                 submitText: 'Update',
@@ -248,7 +328,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                                           SetOptions(merge: true));
                                 },
                                 onAskLaterCallback: (feedback) {
-                                  Navigator.of(context).pop();
+                                  // Navigator.of(context).pop();
                                 },
                               );
                             },
@@ -267,6 +347,7 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
                                 mono: docEvent["mobileno"],
                                 fullName: docEvent["fullname"],
                                 emailId: docEvent["emailid"],
+                                dob: docEvent["dateofbirth"],
                               ),
                             ),
                           );
@@ -284,14 +365,50 @@ class _ParticipateNameScreenState extends State<ParticipateNameScreen> {
           );
         }
         return Container(
-            height: 60,
-            child: Center(
-              child: Text(
-                "NO DATA",
-                style: GoogleFonts.openSans(fontWeight: FontWeight.w600,fontSize: 18),
-              ),
-            ));
+          height: 60,
+          child: Center(
+            child: Text(
+              "NO DATA",
+              style: GoogleFonts.openSans(
+                  fontWeight: FontWeight.w600, fontSize: 18),
+            ),
+          ),
+        );
       },
     );
+  }
+
+  Future<List<String>> getSelectedIds() async {
+    final id = objParticipateDetails
+        .where("eventid", isEqualTo: widget.eventId)
+        .where("isselect", isEqualTo: true)
+        .get()
+        .then((value) => value.docs.map((e) => e.id).toList());
+    return await id;
+  }
+
+  Future getSelectedIdsList() async {
+    final Future<List<dynamic>> futureList = getSelectedIds();
+    var list = await futureList;
+    tmpList = list;
+    await get();
+    // print("Id is $tmpList");
+  }
+
+  Future get() async {
+    partiForTeam = [];
+    for (var i in tmpList) {
+      objParticipateDetails.doc(i).get().then((value) {
+        if (value.exists) {
+          partiForTeam.add(value["studentid"]);
+        }
+      });
+    }
+  }
+
+  getPrefData() async {
+    await Future.delayed(Duration(seconds: 2));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    jIds = (await prefs.getString("judgeId"))!;
   }
 }

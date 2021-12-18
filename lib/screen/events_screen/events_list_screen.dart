@@ -59,11 +59,11 @@ class _EventsScreenState extends State<EventsScreen> {
                       scrollDirection: Axis.vertical,
                       itemCount: snapshot.data?.docs.length,
                       itemBuilder: (BuildContext context, int index) {
-                        QueryDocumentSnapshot<Object?>? documentSnapshot =
+                        QueryDocumentSnapshot<Object?>? documentSnapshot1 =
                             snapshot.data?.docs[index];
                         return FutureBuilder(
                           future: objEventDetails
-                              .doc("${documentSnapshot!['eventid']}")
+                              .doc("${documentSnapshot1!["eventid"]}")
                               .get(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {

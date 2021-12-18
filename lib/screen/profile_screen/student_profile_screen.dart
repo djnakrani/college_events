@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:college_events/screen/admin_screens/add_student_screen/add_student_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class StudentProfileScreen extends StatefulWidget {
   final int pId;
@@ -8,11 +11,21 @@ class StudentProfileScreen extends StatefulWidget {
   final String enrollNo;
   final String fullName;
   final String gender;
+  final Timestamp dob;
   final String mono;
   final String clgName;
   final String sClass;
 
-  StudentProfileScreen({required this.pId, required this.emailId, required this.enrollNo, required this.fullName, required this.gender, required this.mono, required this.clgName, required this.sClass});
+  StudentProfileScreen(
+      {required this.pId,
+      required this.emailId,
+      required this.enrollNo,
+      required this.fullName,
+      required this.gender,
+      required this.mono,
+      required this.clgName,
+      required this.sClass, required this.dob});
+
   @override
   State<StatefulWidget> createState() {
     return _StudentProfileScreenState();
@@ -30,16 +43,22 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     "College Name",
   ];
 
-  @override void initState() {
+  @override
+  void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
+    var dtFormat = new DateFormat('dd-MM-yyyy');
+    var dtFormat1 = new DateFormat('EEE, MMM d, yyyy');
+    String dob = dtFormat.format(widget.dob.toDate());
+    String dob1 = dtFormat1.format(widget.dob.toDate());
     List<String> items1 = <String>[
       widget.enrollNo,
       widget.sClass,
       widget.gender,
-      "08-05-2000",
+      dob,
       widget.emailId,
       widget.mono,
       widget.clgName,
@@ -51,7 +70,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
-          widget.pId == 0 ? "Profile" :"Participate Details",
+          widget.pId == 0 ? "Profile" : "Participate Details",
           style: GoogleFonts.openSans(
             color: Colors.black,
             fontSize: 25,
@@ -108,7 +127,24 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                         ),
                       ),
                       color: Theme.of(context).primaryColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddStudentScreen(
+                              mTitle: 'Edit',
+                              clg: widget.clgName,
+                              emailId: widget.emailId,
+                              eNumber: widget.enrollNo,
+                              gender: widget.gender,
+                              fName: widget.fullName,
+                              mNumber: widget.mono,
+                              dob: dob1,
+                              sClass: widget.sClass,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     width: MediaQuery.of(context).size.width * 0.78,
                     margin: EdgeInsets.all(15),
